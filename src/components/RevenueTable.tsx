@@ -29,7 +29,12 @@ const UNIT_NAMES = {
 const TYPE_NAMES = {
   cash: "Наличные",
   bank: "Расчетный счет",
-  card: "Эквайринг"
+  card: "Эквайринг",
+  "legal-account": "Счет юр.лица",
+  "personal-account": "Счет физ.лица",
+  "online-payment": "Онлайн оплаты",
+  terminal: "Терминал",
+  "hotel-cash": "Наличка"
 };
 
 const UNIT_COLORS = {
@@ -49,6 +54,11 @@ export const RevenueTable = ({ data }: RevenueTableProps) => {
         cash: 0,
         bank: 0,
         card: 0,
+        "legal-account": 0,
+        "personal-account": 0,
+        "online-payment": 0,
+        terminal: 0,
+        "hotel-cash": 0,
         total: 0
       };
     }
@@ -83,9 +93,14 @@ export const RevenueTable = ({ data }: RevenueTableProps) => {
               <TableRow>
                 <TableHead className="text-muted-foreground">Дата</TableHead>
                 <TableHead className="text-muted-foreground">Бизнес-юнит</TableHead>
-                <TableHead className="text-right text-muted-foreground">Наличные</TableHead>
-                <TableHead className="text-right text-muted-foreground">Расчетный счет</TableHead>
-                <TableHead className="text-right text-muted-foreground">Эквайринг</TableHead>
+                <TableHead className="text-right text-muted-foreground">Счет юр.л</TableHead>
+                <TableHead className="text-right text-muted-foreground">Счет физ.л</TableHead>
+                <TableHead className="text-right text-muted-foreground">Онлайн</TableHead>
+                <TableHead className="text-right text-muted-foreground">Термин.</TableHead>
+                <TableHead className="text-right text-muted-foreground">Наличка</TableHead>
+                <TableHead className="text-right text-muted-foreground">Нал.(общ)</TableHead>
+                <TableHead className="text-right text-muted-foreground">Расч.счет</TableHead>
+                <TableHead className="text-right text-muted-foreground">Эквайр.</TableHead>
                 <TableHead className="text-right text-muted-foreground">Итого</TableHead>
               </TableRow>
             </TableHeader>
@@ -102,6 +117,21 @@ export const RevenueTable = ({ data }: RevenueTableProps) => {
                     >
                       {UNIT_NAMES[row.unit as keyof typeof UNIT_NAMES]}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-foreground">
+                    {row["legal-account"].toLocaleString("ru-RU")} ₽
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-foreground">
+                    {row["personal-account"].toLocaleString("ru-RU")} ₽
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-foreground">
+                    {row["online-payment"].toLocaleString("ru-RU")} ₽
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-foreground">
+                    {row.terminal.toLocaleString("ru-RU")} ₽
+                  </TableCell>
+                  <TableCell className="text-right font-mono text-foreground">
+                    {row["hotel-cash"].toLocaleString("ru-RU")} ₽
                   </TableCell>
                   <TableCell className="text-right font-mono text-foreground">
                     {row.cash.toLocaleString("ru-RU")} ₽

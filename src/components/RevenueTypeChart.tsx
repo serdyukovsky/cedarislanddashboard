@@ -15,34 +15,33 @@ interface RevenueTypeChartProps {
 const COLORS = {
   cash: "hsl(var(--cash-color))",
   bank: "hsl(var(--bank-color))",
-  card: "hsl(var(--card-color))"
+  card: "hsl(var(--card-color))",
+  "legal-account": "hsl(var(--legal-account-color))",
+  "personal-account": "hsl(var(--personal-account-color))",
+  "online-payment": "hsl(var(--online-payment-color))",
+  terminal: "hsl(var(--terminal-color))",
+  "hotel-cash": "hsl(var(--hotel-cash-color))"
 };
 
 const NAMES = {
   cash: "Наличные",
   bank: "Расчетный счет", 
-  card: "Эквайринг"
+  card: "Эквайринг",
+  "legal-account": "Счет юр.лица",
+  "personal-account": "Счет физ.лица",
+  "online-payment": "Онлайн оплаты",
+  terminal: "Терминал",
+  "hotel-cash": "Наличка"
 };
 
 export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
   // Группируем данные по типам оплаты
-  const chartData = [
-    {
-      name: NAMES.cash,
-      value: data.filter(item => item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
-      type: "cash"
-    },
-    {
-      name: NAMES.bank,
-      value: data.filter(item => item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
-      type: "bank"
-    },
-    {
-      name: NAMES.card,
-      value: data.filter(item => item.type === "card").reduce((sum, item) => sum + item.amount, 0),
-      type: "card"
-    }
-  ];
+  const allTypes = ["cash", "bank", "card", "legal-account", "personal-account", "online-payment", "terminal", "hotel-cash"];
+  const chartData = allTypes.map(type => ({
+    name: NAMES[type as keyof typeof NAMES],
+    value: data.filter(item => item.type === type).reduce((sum, item) => sum + item.amount, 0),
+    type: type
+  })).filter(item => item.value > 0);
 
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
 

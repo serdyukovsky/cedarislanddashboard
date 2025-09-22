@@ -64,6 +64,12 @@ export default {
         spa: "hsl(var(--spa-color))",
         cash: "hsl(var(--cash-color))",
         bank: "hsl(var(--bank-color))",
+        card: "hsl(var(--card-color))",
+        "legal-account": "hsl(var(--legal-account-color))",
+        "personal-account": "hsl(var(--personal-account-color))",
+        "online-payment": "hsl(var(--online-payment-color))",
+        terminal: "hsl(var(--terminal-color))",
+        "hotel-cash": "hsl(var(--hotel-cash-color))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

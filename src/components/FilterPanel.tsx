@@ -96,6 +96,36 @@ export function FilterPanel({
                     Эквайринг
                   </div>
                 </SelectItem>
+                <SelectItem value="legal-account">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="h-4 w-4 text-legal-account" />
+                    Счет юр.лица
+                  </div>
+                </SelectItem>
+                <SelectItem value="personal-account">
+                  <div className="flex items-center gap-2">
+                    <Landmark className="h-4 w-4 text-personal-account" />
+                    Счет физ.лица
+                  </div>
+                </SelectItem>
+                <SelectItem value="online-payment">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="h-4 w-4 text-online-payment" />
+                    Онлайн оплаты
+                  </div>
+                </SelectItem>
+                <SelectItem value="terminal">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="h-4 w-4 text-terminal" />
+                    Терминал
+                  </div>
+                </SelectItem>
+                <SelectItem value="hotel-cash">
+                  <div className="flex items-center gap-2">
+                    <Banknote className="h-4 w-4 text-hotel-cash" />
+                    Наличка (отель)
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

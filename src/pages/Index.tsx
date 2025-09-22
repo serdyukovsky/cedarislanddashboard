@@ -11,18 +11,26 @@ import { FilterPanel } from "@/components/FilterPanel";
 
 // Mock data
 const mockData = [
-  { date: "2024-01-15", unit: "hotel", type: "cash", amount: 45000 },
-  { date: "2024-01-15", unit: "hotel", type: "bank", amount: 120000 },
-  { date: "2024-01-15", unit: "hotel", type: "card", amount: 85000 },
+  // Отель - расширенные типы оплаты
+  { date: "2024-01-15", unit: "hotel", type: "legal-account", amount: 120000 },
+  { date: "2024-01-15", unit: "hotel", type: "personal-account", amount: 85000 },
+  { date: "2024-01-15", unit: "hotel", type: "online-payment", amount: 65000 },
+  { date: "2024-01-15", unit: "hotel", type: "terminal", amount: 45000 },
+  { date: "2024-01-15", unit: "hotel", type: "hotel-cash", amount: 35000 },
+  // Ресторан - стандартные типы
   { date: "2024-01-15", unit: "restaurant", type: "cash", amount: 25000 },
   { date: "2024-01-15", unit: "restaurant", type: "bank", amount: 35000 },
   { date: "2024-01-15", unit: "restaurant", type: "card", amount: 55000 },
+  // Спа - стандартные типы
   { date: "2024-01-15", unit: "spa", type: "cash", amount: 15000 },
   { date: "2024-01-15", unit: "spa", type: "bank", amount: 28000 },
   { date: "2024-01-15", unit: "spa", type: "card", amount: 32000 },
-  { date: "2024-01-16", unit: "hotel", type: "cash", amount: 52000 },
-  { date: "2024-01-16", unit: "hotel", type: "bank", amount: 135000 },
-  { date: "2024-01-16", unit: "hotel", type: "card", amount: 90000 },
+  // Следующий день
+  { date: "2024-01-16", unit: "hotel", type: "legal-account", amount: 135000 },
+  { date: "2024-01-16", unit: "hotel", type: "personal-account", amount: 90000 },
+  { date: "2024-01-16", unit: "hotel", type: "online-payment", amount: 72000 },
+  { date: "2024-01-16", unit: "hotel", type: "terminal", amount: 52000 },
+  { date: "2024-01-16", unit: "hotel", type: "hotel-cash", amount: 38000 },
   { date: "2024-01-16", unit: "restaurant", type: "cash", amount: 28000 },
   { date: "2024-01-16", unit: "restaurant", type: "bank", amount: 42000 },
   { date: "2024-01-16", unit: "restaurant", type: "card", amount: 62000 },
