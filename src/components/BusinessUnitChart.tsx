@@ -13,28 +13,31 @@ interface BusinessUnitChartProps {
 }
 
 export const BusinessUnitChart = ({ data }: BusinessUnitChartProps) => {
-  // Группируем данные по юнитам
   const chartData = [
     {
       unit: "Отель и бани",
       total: data.filter(item => item.unit === "hotel").reduce((sum, item) => sum + item.amount, 0),
-      cash: data.filter(item => item.unit === "hotel" && item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
-      bank: data.filter(item => item.unit === "hotel" && item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
-      card: data.filter(item => item.unit === "hotel" && item.type === "card").reduce((sum, item) => sum + item.amount, 0),
+      // Для отеля группируем новые типы оплаты
+      "Онлайн и счета": data.filter(item => 
+        item.unit === "hotel" && 
+        ["legal-account", "personal-account", "online-payment"].includes(item.type)
+      ).reduce((sum, item) => sum + item.amount, 0),
+      "Терминал": data.filter(item => item.unit === "hotel" && item.type === "terminal").reduce((sum, item) => sum + item.amount, 0),
+      "Наличные": data.filter(item => item.unit === "hotel" && item.type === "hotel-cash").reduce((sum, item) => sum + item.amount, 0),
     },
     {
       unit: "Ресторан", 
       total: data.filter(item => item.unit === "restaurant").reduce((sum, item) => sum + item.amount, 0),
-      cash: data.filter(item => item.unit === "restaurant" && item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
-      bank: data.filter(item => item.unit === "restaurant" && item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
-      card: data.filter(item => item.unit === "restaurant" && item.type === "card").reduce((sum, item) => sum + item.amount, 0),
+      "Наличные": data.filter(item => item.unit === "restaurant" && item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
+      "Расчетный счет": data.filter(item => item.unit === "restaurant" && item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
+      "Эквайринг": data.filter(item => item.unit === "restaurant" && item.type === "card").reduce((sum, item) => sum + item.amount, 0),
     },
     {
       unit: "Спа-центр",
       total: data.filter(item => item.unit === "spa").reduce((sum, item) => sum + item.amount, 0),
-      cash: data.filter(item => item.unit === "spa" && item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
-      bank: data.filter(item => item.unit === "spa" && item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
-      card: data.filter(item => item.unit === "spa" && item.type === "card").reduce((sum, item) => sum + item.amount, 0),
+      "Наличные": data.filter(item => item.unit === "spa" && item.type === "cash").reduce((sum, item) => sum + item.amount, 0),
+      "Расчетный счет": data.filter(item => item.unit === "spa" && item.type === "bank").reduce((sum, item) => sum + item.amount, 0),
+      "Эквайринг": data.filter(item => item.unit === "spa" && item.type === "card").reduce((sum, item) => sum + item.amount, 0),
     }
   ];
 
@@ -71,22 +74,34 @@ export const BusinessUnitChart = ({ data }: BusinessUnitChartProps) => {
             />
             <Legend />
             <Bar 
-              dataKey="cash" 
+              dataKey="Наличные" 
               fill="hsl(var(--cash-color))" 
               name="Наличные"
-              radius={[0, 0, 4, 4]}
+              radius={[2, 2, 0, 0]}
             />
             <Bar 
-              dataKey="bank" 
+              dataKey="Расчетный счет" 
               fill="hsl(var(--bank-color))" 
               name="Расчетный счет"
-              radius={[0, 0, 4, 4]}
+              radius={[2, 2, 0, 0]}
             />
             <Bar 
-              dataKey="card" 
+              dataKey="Эквайринг" 
               fill="hsl(var(--card-color))" 
               name="Эквайринг"
-              radius={[4, 4, 0, 0]}
+              radius={[2, 2, 0, 0]}
+            />
+            <Bar 
+              dataKey="Онлайн и счета" 
+              fill="hsl(var(--online-payment-color))" 
+              name="Онлайн и счета"
+              radius={[2, 2, 0, 0]}
+            />
+            <Bar 
+              dataKey="Терминал" 
+              fill="hsl(var(--terminal-color))" 
+              name="Терминал"
+              radius={[2, 2, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>

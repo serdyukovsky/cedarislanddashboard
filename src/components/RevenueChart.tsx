@@ -13,7 +13,7 @@ interface RevenueChartProps {
 }
 
 export const RevenueChart = ({ data }: RevenueChartProps) => {
-  // Группируем данные по датам и юнитам
+  // Группируем данные по датам и юнитам (суммируем все типы оплаты для каждого юнита)
   const chartData = data.reduce((acc, item) => {
     const existingDate = acc.find(d => d.date === item.date);
     if (existingDate) {

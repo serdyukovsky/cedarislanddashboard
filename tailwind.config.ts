@@ -59,12 +59,14 @@ export default {
           DEFAULT: "hsl(var(--info))",
           foreground: "hsl(var(--info-foreground))",
         },
+        // Business units
         hotel: "hsl(var(--hotel-color))",
         restaurant: "hsl(var(--restaurant-color))",
         spa: "hsl(var(--spa-color))",
-        cash: "hsl(var(--cash-color))",
-        bank: "hsl(var(--bank-color))",
-        card: "hsl(var(--card-color))",
+        // Payment types (using payment- prefix to avoid conflicts)
+        "payment-cash": "hsl(var(--cash-color))",
+        "payment-bank": "hsl(var(--bank-color))",
+        "payment-card": "hsl(var(--card-color))",
         "legal-account": "hsl(var(--legal-account-color))",
         "personal-account": "hsl(var(--personal-account-color))",
         "online-payment": "hsl(var(--online-payment-color))",

@@ -80,19 +80,19 @@ export function FilterPanel({
                 </SelectItem>
                 <SelectItem value="cash">
                   <div className="flex items-center gap-2">
-                    <Banknote className="h-4 w-4 text-cash" />
+                    <Banknote className="h-4 w-4 text-payment-cash" />
                     Наличные
                   </div>
                 </SelectItem>
                 <SelectItem value="bank">
                   <div className="flex items-center gap-2">
-                    <Landmark className="h-4 w-4 text-bank" />
+                    <Landmark className="h-4 w-4 text-payment-bank" />
                     Расчетный счет
                   </div>
                 </SelectItem>
                 <SelectItem value="card">
                   <div className="flex items-center gap-2">
-                    <CreditCard className="h-4 w-4 text-card" />
+                    <CreditCard className="h-4 w-4 text-payment-card" />
                     Эквайринг
                   </div>
                 </SelectItem>
