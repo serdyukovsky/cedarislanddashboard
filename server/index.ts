@@ -16,7 +16,24 @@ interface CacheEntry {
 }
 
 const cache = new Map<string, CacheEntry>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 минут
+const CACHE_DURATION = 15 * 60 * 1000; // 15 минут для production
+const MAX_REQUESTS_PER_MINUTE = 10; // Ограничиваем количество запросов
+
+let requestCount = 0;
+let lastResetTime = Date.now();
+
+function canMakeRequest(): boolean {
+	const now = Date.now();
+	if (now - lastResetTime > 60000) { // Сбрасываем счетчик каждую минуту
+		requestCount = 0;
+		lastResetTime = now;
+	}
+	return requestCount < MAX_REQUESTS_PER_MINUTE;
+}
+
+function incrementRequestCount(): void {
+	requestCount++;
+}
 
 function getCacheKey(unit: string, from?: string, to?: string): string {
 	return `${unit}-${from || 'all'}-${to || 'all'}`;
@@ -100,6 +117,28 @@ app.get("/api/finance", async (req, res) => {
 			});
 			return;
 		}
+
+		// Проверяем лимит запросов
+		if (!canMakeRequest()) {
+			console.log("Rate limit exceeded, returning cached data if available");
+			const fallbackCache = getCachedData("all-all-all"); // Используем общий кэш как fallback
+			if (fallbackCache) {
+				console.log("Returning fallback cached data due to rate limit");
+				res.json({
+					data: fallbackCache.data,
+					lastModified: fallbackCache.lastModified,
+					revenueLastModified: fallbackCache.revenueLastModified,
+					expenseLastModified: fallbackCache.expenseLastModified
+				});
+				return;
+			}
+			return res.status(429).json({ 
+				error: "Rate limit exceeded", 
+				message: "Too many requests to Google Sheets API. Please try again later." 
+			});
+		}
+
+		incrementRequestCount();
 
 		const revenueSheetId = process.env.REVENUE_SHEET_ID as string;
 		const expenseSheetId = process.env.EXPENSE_SHEET_ID as string;
