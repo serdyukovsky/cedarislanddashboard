@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Angry';
-  src: url('/fonts/angry.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
@@ -147,7 +140,8 @@ All colors MUST be HSL.
 
 @layer utilities {
   .font-angry {
-    font-family: 'Angry', sans-serif;
+    font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    font-weight: 900;
   }
   
   /* Glassmorphism effect for tooltips */
