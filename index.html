@@ -15,6 +15,20 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- Предотвращаем желтый фон при загрузке -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(to bottom right, #f8fafc, rgba(239, 246, 255, 0.3), rgba(236, 254, 255, 0.2)) !important;
+        min-height: 100vh;
+      }
+      #root {
+        background: linear-gradient(to bottom right, #f8fafc, rgba(239, 246, 255, 0.3), rgba(236, 254, 255, 0.2)) !important;
+        min-height: 100vh;
+      }
+    </style>
   </head>
 
   <body>

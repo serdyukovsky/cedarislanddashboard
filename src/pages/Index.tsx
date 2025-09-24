@@ -242,8 +242,8 @@ const Index = () => {
     const currentMonthRevenue = (Array.isArray(dataSource) ? dataSource : []).reduce(
       (acc, d) => {
         try {
-          const revenue = Number(d?.revenue?.total) || 0;
-          acc += revenue;
+            const revenue = Number(d?.revenue?.total) || 0;
+            acc += revenue;
         } catch (error) {
           console.warn('Error processing current month data:', error, d);
         }
@@ -265,24 +265,24 @@ const Index = () => {
     let prevMonthRevenue = 0;
     if (hasAllData) {
       prevMonthRevenue = (Array.isArray(allData) ? allData : []).reduce(
-        (acc, d) => {
-          try {
-            const date = new Date(d.date);
+      (acc, d) => {
+        try {
+          const date = new Date(d.date);
             const prevFrom = new Date(prevMonthFrom);
             const prevTo = new Date(prevMonthTo);
             
             // Check if date is within previous month range
             if (date >= prevFrom && date <= prevTo) {
-              const revenue = Number(d?.revenue?.total) || 0;
-              acc += revenue;
-            }
-          } catch (error) {
-            console.warn('Error processing previous month data:', error, d);
+            const revenue = Number(d?.revenue?.total) || 0;
+            acc += revenue;
           }
-          return acc;
-        },
-        0
-      );
+        } catch (error) {
+          console.warn('Error processing previous month data:', error, d);
+        }
+        return acc;
+      },
+      0
+    );
     } else {
       console.log('Cannot calculate previous month revenue: allData not available');
       return null;
@@ -1151,17 +1151,17 @@ const Index = () => {
         <div className="space-y-4">
           <ExpenseBreakdown data={data} />
 
-          <div 
+        <div 
             className="flex items-center gap-2 cursor-pointer glassmorphism-hover p-2 rounded-xl"
             onClick={() => setShowExpenseCategories(!showExpenseCategories)}
-          >
+        >
             <h2 className="text-lg font-semibold text-foreground">Топ-15 статей расходов</h2>
             {showExpenseCategories ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </div>
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
+        </div>
 
           {showExpenseCategories && <ExpenseCategories data={data} periodText={formatSelectedPeriod()} />}
         </div>
