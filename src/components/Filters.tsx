@@ -183,18 +183,19 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 	};
 
 	return (
-		<div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg p-6 space-y-6">
+		<div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
 			{/* Быстрые фильтры */}
 			<div className="space-y-3">
-				<div className="flex flex-wrap gap-3">
+				<div className="flex flex-wrap gap-2 sm:gap-3">
 					<Button
 						variant={getSelectedMonthName() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentMonth}
-						className="flex items-center gap-2"
+						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
 					>
-						<Clock className="h-4 w-4" />
-						Текущий месяц
+						<Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+						<span className="hidden sm:inline">Текущий месяц</span>
+						<span className="sm:hidden">Месяц</span>
 					</Button>
 
 					<DropdownMenu>
@@ -202,10 +203,11 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 							<Button
 								variant={getSelectedMonthName() ? "default" : "outline"}
 								size="sm"
-								className="flex items-center gap-2"
+								className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
 							>
-								<Calendar className="h-4 w-4" />
-								{getSelectedMonthName() || "Выбрать месяц"}
+								<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+								<span className="hidden sm:inline">{getSelectedMonthName() || "Выбрать месяц"}</span>
+								<span className="sm:hidden">{getSelectedMonthName() ? getSelectedMonthName().split(' ')[0] : "Месяц"}</span>
 								<ChevronDown className="h-3 w-3" />
 							</Button>
 						</DropdownMenuTrigger>
@@ -229,20 +231,22 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						variant={getSelectedYearName() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentYear}
-						className="flex items-center gap-2"
+						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
 					>
-						<Calendar className="h-4 w-4" />
-						{getSelectedYearName() || "Текущий год"}
+						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+						<span className="hidden sm:inline">{getSelectedYearName() || "Текущий год"}</span>
+						<span className="sm:hidden">{getSelectedYearName() || "Год"}</span>
 					</Button>
 
 					<Button
 						variant={isAllTimeSelected() ? "default" : "outline"}
 						size="sm"
 						onClick={setAllTime}
-						className="flex items-center gap-2"
+						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
 					>
-						<Calendar className="h-4 w-4" />
-						За все время
+						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+						<span className="hidden sm:inline">За все время</span>
+						<span className="sm:hidden">Все</span>
 					</Button>
 				</div>
 			</div>
@@ -250,7 +254,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 			{/* Ручные фильтры */}
 			<div className="space-y-3">
 				<label className="text-sm font-medium text-muted-foreground">Настройка вручную</label>
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 					{/* Поле "С даты" */}
 					<div className="space-y-2">
 						<label className="text-sm text-muted-foreground">С даты</label>
@@ -294,15 +298,16 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Кнопка применения */}
-					<div className="space-y-2">
+					<div className="space-y-2 sm:col-span-2 lg:col-span-1">
 						<label className="text-sm text-muted-foreground opacity-0">Применить</label>
 						<Button
 							onClick={applyFilter}
 							disabled={!isManualInput}
-							className="w-full h-10 flex items-center gap-2"
+							className="w-full h-10 flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
 						>
-							<Search className="h-4 w-4" />
-							Применить
+							<Search className="h-3 w-3 sm:h-4 sm:w-4" />
+							<span className="hidden sm:inline">Применить</span>
+							<span className="sm:hidden">OK</span>
 						</Button>
 					</div>
 				</div>

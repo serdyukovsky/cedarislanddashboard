@@ -14,12 +14,12 @@ export function DailyLines({ data }: { data: AggregatedDailyUnit[] }) {
 
 	return (
 		<div className="border rounded-lg p-3 bg-card">
-			<h3 className="font-semibold mb-2">Динамика доходов/расходов/прибыли</h3>
-			<ResponsiveContainer width="100%" height={320}>
+			<h3 className="font-semibold mb-2 text-sm sm:text-base">Динамика доходов/расходов/прибыли</h3>
+			<ResponsiveContainer width="100%" height={250}>
 				<LineChart data={rows}>
 					<CartesianGrid strokeDasharray="3 3" />
-					<XAxis dataKey="date" tick={{ fontSize: 12 }} />
-					<YAxis tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} tick={{ fontSize: 12 }} />
+					<XAxis dataKey="date" tick={{ fontSize: 10 }} />
+					<YAxis tickFormatter={(v) => `${(v/1000).toFixed(0)}k`} tick={{ fontSize: 10 }} />
 					<Tooltip 
 						contentStyle={{
 							backgroundColor: 'rgba(255, 255, 255, 0.4)',

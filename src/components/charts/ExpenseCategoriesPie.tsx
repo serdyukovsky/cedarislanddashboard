@@ -121,19 +121,19 @@ export function ExpenseCategoriesPie({ data }: Props) {
   
   if (chartData.length === 0) {
     return (
-      <div className="border rounded-lg p-6 bg-card">
-        <h3 className="font-semibold mb-4 text-center">Распределение расходов по категориям</h3>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Нет данных о расходах для отображения</p>
+      <div className="border rounded-lg p-3 bg-card">
+        <h3 className="font-semibold mb-2 text-center text-sm sm:text-base">Распределение расходов по категориям</h3>
+        <div className="flex items-center justify-center h-48 sm:h-56">
+          <p className="text-muted-foreground text-xs sm:text-sm">Нет данных о расходах для отображения</p>
         </div>
       </div>
     );
   }
   
   return (
-    <div className="border rounded-lg p-6 bg-card">
-      <h3 className="font-semibold mb-4 text-center">Распределение расходов по категориям</h3>
-      <div className="h-64">
+    <div className="border rounded-lg p-3 bg-card">
+      <h3 className="font-semibold mb-2 text-center text-sm sm:text-base">Распределение расходов по категориям</h3>
+      <div className="h-48 sm:h-56">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie

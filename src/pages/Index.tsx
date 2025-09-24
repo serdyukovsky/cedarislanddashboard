@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap } from "lucide-react";
 import { Filters } from "@/components/Filters";
@@ -507,19 +506,20 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-cyan-50/20 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-white p-3 sm:p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          <div>
+          <div className="w-full lg:w-auto">
             <div className="flex items-center gap-3">
               <img 
                 src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
                 alt="Кедровый Остров" 
-                className="h-12 w-auto brightness-0"
+                className="h-10 sm:h-12 w-auto brightness-0"
               />
-                  <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-10">
+                  <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-8 sm:-mt-10">
                     <BarChart3 className="h-3 w-3" />
-                    Dashboard
+                    <span className="hidden sm:inline">Dashboard</span>
+                    <span className="sm:hidden">Dash</span>
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 ml-1">
                       <Zap className="h-3 w-3" />
                     </span>
@@ -538,9 +538,9 @@ const Index = () => {
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               О приложении
             </a>
-            <button className="flex items-center justify-center w-8 h-8 text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
+            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
               <User className="h-5 w-5" />
-            </button>
+            </a>
           </nav>
         </div>
         
@@ -553,7 +553,7 @@ const Index = () => {
         </div>
 
         {/* Отступ между фильтром и операционной прибылью */}
-        <div style={{ height: '60px' }}></div>
+        <div className="h-12 sm:h-16 lg:h-20"></div>
 
         {/* Заголовок блока операционной прибыли */}
         <div className="mb-4">
@@ -571,7 +571,7 @@ const Index = () => {
         </div>
 
         {/* Блок операционной прибыли */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Общая прибыль - выделенная карточка */}
           <Card className="shadow-card border-2 border-success/20 bg-gradient-to-br from-success/5 to-success/10 col-span-1 md:col-span-2 lg:col-span-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
@@ -726,7 +726,7 @@ const Index = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="shadow-card bg-gray-900 border-gray-700 shadow-2xl" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'}}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общая выручка</CardTitle>
@@ -863,7 +863,7 @@ const Index = () => {
         </div>
 
         {/* Блок расходов */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="shadow-card bg-gray-900 border-gray-700 shadow-2xl" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'}}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общие расходы</CardTitle>
@@ -1166,12 +1166,12 @@ const Index = () => {
           {showExpenseCategories && <ExpenseCategories data={data} periodText={formatSelectedPeriod()} />}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <DailyLines data={data} />
           <UnitsBars data={data} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <RevenuePie data={data} />
           <ExpensePie data={data} />
           <ExpenseCategoriesPie data={data} />

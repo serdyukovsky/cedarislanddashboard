@@ -21,12 +21,24 @@
       html, body {
         margin: 0;
         padding: 0;
-        background: linear-gradient(to bottom right, #f8fafc, rgba(239, 246, 255, 0.3), rgba(236, 254, 255, 0.2)) !important;
+        background: white !important;
         min-height: 100vh;
       }
       #root {
-        background: linear-gradient(to bottom right, #f8fafc, rgba(239, 246, 255, 0.3), rgba(236, 254, 255, 0.2)) !important;
+        background: white !important;
         min-height: 100vh;
+      }
+      
+      /* Убираем желтый цвет с кнопок */
+      button, input[type="button"], input[type="submit"], input[type="reset"] {
+        background-color: #f8fafc !important;
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+      }
+      
+      button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+        background-color: #3b82f6 !important;
+        color: white !important;
       }
     </style>
   </head>
