@@ -152,6 +152,11 @@ All colors MUST be HSL.
       font-weight: 900 !important;
       font-display: block !important;
     }
+    
+    /* Force font loading for all headings on mobile */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
+    }
   }
 
   /* Remove yellow autofill background */
@@ -163,8 +168,9 @@ All colors MUST be HSL.
   select:-webkit-autofill:hover,
   select:-webkit-autofill:focus,
   select:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: inherit !important;
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: #000 !important;
     background-color: white !important;
     background: white !important;
   }

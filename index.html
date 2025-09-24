@@ -28,8 +28,9 @@
               select:-webkit-autofill:hover,
               select:-webkit-autofill:focus,
               select:-webkit-autofill:active {
-                -webkit-box-shadow: 0 0 0 1000px white inset !important;
-                -webkit-text-fill-color: inherit !important;
+                -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+                transition: background-color 5000s ease-in-out 0s;
+                -webkit-text-fill-color: #000 !important;
                 background-color: white !important;
                 background: white !important;
               }
@@ -55,34 +56,53 @@
         }
       }
     </style>
-    <script>
-      // Force font loading on mobile devices
-      (function() {
-        if (window.innerWidth <= 768) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = 'https://fonts.googleapis.com/css2?family=Angry:wght@400&display=block';
-          document.head.appendChild(link);
-          
-          // Preload font files
-          const woff2 = document.createElement('link');
-          woff2.rel = 'preload';
-          woff2.as = 'font';
-          woff2.type = 'font/woff2';
-          woff2.href = 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff2';
-          woff2.crossOrigin = 'anonymous';
-          document.head.appendChild(woff2);
-          
-          const woff = document.createElement('link');
-          woff.rel = 'preload';
-          woff.as = 'font';
-          woff.type = 'font/woff';
-          woff.href = 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff';
-          woff.crossOrigin = 'anonymous';
-          document.head.appendChild(woff);
-        }
-      })();
-    </script>
+            <script>
+              // Force font loading on mobile devices
+              (function() {
+                // Always load font for mobile devices
+                const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                if (isMobile) {
+                  console.log('Mobile device detected, loading Angry font...');
+                  
+                  // Add multiple font loading methods
+                  const fontLink = document.createElement('link');
+                  fontLink.rel = 'stylesheet';
+                  fontLink.href = 'https://fonts.googleapis.com/css2?family=Angry:wght@400&display=block';
+                  document.head.appendChild(fontLink);
+                  
+                  // Preload font files with multiple formats
+                  const preloads = [
+                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff2', type: 'font/woff2' },
+                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff', type: 'font/woff' },
+                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.ttf', type: 'font/truetype' }
+                  ];
+                  
+                  preloads.forEach(preload => {
+                    const link = document.createElement('link');
+                    link.rel = 'preload';
+                    link.as = 'font';
+                    link.type = preload.type;
+                    link.href = preload.href;
+                    link.crossOrigin = 'anonymous';
+                    document.head.appendChild(link);
+                  });
+                  
+                  // Force font application after loading
+                  setTimeout(() => {
+                    const style = document.createElement('style');
+                    style.textContent = `
+                      .font-angry {
+                        font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
+                        font-weight: 900 !important;
+                      }
+                    `;
+                    document.head.appendChild(style);
+                    console.log('Angry font styles applied for mobile');
+                  }, 1000);
+                }
+              })();
+            </script>
     <title>Дашборд выручки компании</title>
     <meta name="description" content="Корпоративный дашборд для отслеживания выручки по бизнес-юнитам" />
     <meta name="author" content="Lovable" />
