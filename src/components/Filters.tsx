@@ -233,11 +233,11 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						variant={isCurrentMonth() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentMonth}
-						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+						className="flex items-center justify-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press w-full min-w-0"
 					>
-						<Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-						<span className="hidden sm:inline">Текущий месяц</span>
-						<span className="sm:hidden">Сегодня</span>
+						<Clock className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+						<span className="hidden sm:inline truncate">Текущий месяц</span>
+						<span className="sm:hidden truncate">Сегодня</span>
 					</Button>
 
 					<DropdownMenu>
@@ -245,12 +245,12 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 							<Button
 								variant={getSelectedMonthName() ? "default" : "outline"}
 								size="sm"
-								className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+								className="flex items-center justify-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press w-full min-w-0"
 							>
-								<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-								<span className="hidden sm:inline">{getSelectedMonthName() || "Выбрать месяц"}</span>
-								<span className="sm:hidden">{getSelectedMonthName() ? getSelectedMonthName().split(' ')[0] : "Месяц"}</span>
-								<ChevronDown className="h-3 w-3" />
+								<Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+								<span className="hidden sm:inline truncate">{getSelectedMonthName() || "Выбрать месяц"}</span>
+								<span className="sm:hidden truncate">{getSelectedMonthName() ? getSelectedMonthName().split(' ')[0] : "Месяц"}</span>
+								<ChevronDown className="h-3 w-3 flex-shrink-0" />
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent className="w-56 max-h-60 overflow-y-auto">
@@ -273,22 +273,22 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						variant={getSelectedYearName() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentYear}
-						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+						className="flex items-center justify-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press w-full min-w-0"
 					>
-						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-						<span className="hidden sm:inline">{getSelectedYearName() || "Текущий год"}</span>
-						<span className="sm:hidden">{getSelectedYearName() || "Год"}</span>
+						<Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+						<span className="hidden sm:inline truncate">{getSelectedYearName() || "Текущий год"}</span>
+						<span className="sm:hidden truncate">{getSelectedYearName() || "Год"}</span>
 					</Button>
 
 					<Button
 						variant={isAllTimeSelected() ? "default" : "outline"}
 						size="sm"
 						onClick={setAllTime}
-						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+						className="flex items-center justify-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press w-full min-w-0"
 					>
-						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-						<span className="hidden sm:inline">За все время</span>
-						<span className="sm:hidden">Все</span>
+						<Calendar className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0" />
+						<span className="hidden sm:inline truncate">За все время</span>
+						<span className="sm:hidden truncate">Все</span>
 					</Button>
 				</div>
 			</div>
@@ -296,37 +296,37 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 			{/* Ручные фильтры */}
 			<div className="space-y-3">
 				<label className="text-sm font-medium text-muted-foreground">Настройка вручную</label>
-				<div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 					{/* Поле "С даты" */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
+					<div className="space-y-2 col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">С даты</label>
 						<input 
 							type="date" 
 							value={isManualInput ? (pendingFrom ?? "") : (from ?? "")} 
 							onChange={(e) => handleManualFromChange(e.target.value)} 
-							className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" 
+							className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0" 
 						/>
 					</div>
 
 					{/* Поле "По дату" */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
+					<div className="space-y-2 col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">По дату</label>
 						<input 
 							type="date" 
 							value={isManualInput ? (pendingTo ?? "") : (to ?? "")} 
 							onChange={(e) => handleManualToChange(e.target.value)} 
-							className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors" 
+							className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0" 
 						/>
 					</div>
 
 					{/* Поле "Юнит" */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
+					<div className="space-y-2 col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">Юнит</label>
 						<div className="relative">
 							<select 
 								value={isManualInput ? pendingUnit : unit} 
 								onChange={(e) => handleManualUnitChange(e.target.value as any)} 
-								className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm appearance-none pr-10 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+								className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm appearance-none pr-10 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0"
 							>
 								<option value="all">Все</option>
 								<option value="hotel">Отель и бани</option>
@@ -340,7 +340,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Кнопка применения */}
-					<div className="col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
+					<div className="col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground opacity-0">Применить</label>
 						<Button
 							onClick={applyFilter}

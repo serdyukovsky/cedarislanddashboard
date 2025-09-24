@@ -549,7 +549,7 @@ const Index = () => {
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
         <div className="flex items-center justify-between gap-4">
           {/* Логотип */}
-          <div className="flex items-center gap-3 sm:hidden"> {/* Hide on desktop */}
+          <div className="flex items-center gap-3 sm:hidden mt-2"> {/* Hide on desktop, add margin-top */}
             <img 
               src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
               alt="Кедровый Остров" 

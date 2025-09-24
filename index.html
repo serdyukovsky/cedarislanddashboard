@@ -46,21 +46,49 @@
                 }
               }
 
-              /* Scroll to top button styles */
+            /* Scroll to top button styles */
+            button[aria-label="Прокрутить наверх"] {
+              outline: none !important;
+              border: none !important;
+              -webkit-tap-highlight-color: transparent !important;
+              background-color: rgba(255, 255, 255, 0.2) !important;
+              color: inherit !important;
+            }
+            
+            button[aria-label="Прокрутить наверх"]:active,
+            button[aria-label="Прокрутить наверх"]:focus,
+            button[aria-label="Прокрутить наверх"]:focus-visible,
+            button[aria-label="Прокрутить наверх"]:hover {
+              outline: none !important;
+              border: none !important;
+              background: rgba(255, 255, 255, 0.3) !important;
+              background-color: rgba(255, 255, 255, 0.3) !important;
+              -webkit-tap-highlight-color: transparent !important;
+              color: inherit !important;
+              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+            }
+
+            /* Mobile-specific scroll button fixes */
+            @media (max-width: 640px) {
               button[aria-label="Прокрутить наверх"] {
-                outline: none !important;
-                border: none !important;
                 -webkit-tap-highlight-color: transparent !important;
+                -webkit-touch-callout: none !important;
+                -webkit-user-select: none !important;
+                -khtml-user-select: none !important;
+                -moz-user-select: none !important;
+                -ms-user-select: none !important;
+                user-select: none !important;
+                background-color: rgba(255, 255, 255, 0.2) !important;
+                color: inherit !important;
               }
               
-              button[aria-label="Прокрутить наверх"]:active,
-              button[aria-label="Прокрутить наверх"]:focus,
-              button[aria-label="Прокрутить наверх"]:focus-visible {
-                outline: none !important;
-                border: none !important;
+              button[aria-label="Прокрутить наверх"]:active {
                 background: rgba(255, 255, 255, 0.2) !important;
+                background-color: rgba(255, 255, 255, 0.2) !important;
+                transform: scale(0.95) !important;
                 -webkit-tap-highlight-color: transparent !important;
               }
+            }
 
               /* Shadow press effect for filter buttons */
               .shadow-press {
@@ -104,6 +132,35 @@
                 background: transparent !important;
                 border: none !important;
                 box-shadow: none !important;
+              }
+
+              /* Mobile filter inputs fix */
+              @media (max-width: 640px) {
+                input[type="date"] {
+                  min-width: 0 !important;
+                  width: 100% !important;
+                  box-sizing: border-box !important;
+                  -webkit-appearance: none !important;
+                  -moz-appearance: textfield !important;
+                }
+                
+                input[type="date"]::-webkit-calendar-picker-indicator {
+                  width: 20px !important;
+                  height: 20px !important;
+                  margin: 0 !important;
+                }
+                
+                select {
+                  min-width: 0 !important;
+                  width: 100% !important;
+                  box-sizing: border-box !important;
+                }
+                
+                /* Ensure grid items don't overflow */
+                .grid > div {
+                  min-width: 0 !important;
+                  overflow: hidden !important;
+                }
               }
 
               /* Ensure shadow press effect works on all buttons */
