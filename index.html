@@ -6,6 +6,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap" rel="stylesheet">
+    <!-- Fallback font loading -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap');
+      
+      /* Ensure font loads early */
+      .font-angry {
+        font-family: 'Angry', 'Arial Black', 'Impact', 'Helvetica', 'Arial', sans-serif !important;
+        font-weight: 900 !important;
+        font-display: swap !important;
+      }
+    </style>
     <title>Дашборд выручки компании</title>
     <meta name="description" content="Корпоративный дашборд для отслеживания выручки по бизнес-юнитам" />
     <meta name="author" content="Lovable" />
