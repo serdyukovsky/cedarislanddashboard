@@ -48,9 +48,22 @@ function setCachedData(key: string, data: any[], lastModified: string, revenueLa
 // Prefer .env.local if present, otherwise fallback to .env
 const envLocalPath = path.join(process.cwd(), ".env.local");
 if (fs.existsSync(envLocalPath)) {
-    dotenv.config({ path: envLocalPath });
+	dotenv.config({ path: envLocalPath });
 } else {
-dotenv.config();
+	dotenv.config();
+}
+
+// Проверяем наличие обязательных переменных окружения
+const requiredEnvVars = [
+	'REVENUE_SHEET_ID',
+	'EXPENSE_SHEET_ID',
+	'GOOGLE_SERVICE_ACCOUNT_KEY'
+];
+
+const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+if (missingVars.length > 0) {
+	console.error('❌ Missing required environment variables:', missingVars);
+	console.error('Available env vars:', Object.keys(process.env).filter(key => key.includes('SHEET') || key.includes('GOOGLE')));
 }
 
 const app = express();
@@ -60,6 +73,16 @@ app.use(express.json());
 app.get("/api/finance", async (req, res) => {
 	try {
 		console.log("API request received:", req.query);
+		
+		// Проверяем переменные окружения
+		if (missingVars.length > 0) {
+			console.error('❌ Missing environment variables:', missingVars);
+			return res.status(500).json({ 
+				error: "Server configuration error", 
+				details: `Missing: ${missingVars.join(', ')}` 
+			});
+		}
+		
 		const unit = (req.query.unit as string) || "all";
 		const from = (req.query.from as string) || undefined;
 		const to = (req.query.to as string) || undefined;
@@ -357,7 +380,20 @@ app.get("/api/finance", async (req, res) => {
 			}
 		}
 		
-		res.status(500).json({ error: e?.message || "Failed to fetch" });
+		// Обработка ошибок аутентификации Google
+		if (e?.message?.includes("authentication") || e?.message?.includes("credentials")) {
+			console.error("Google authentication error");
+			return res.status(500).json({ 
+				error: "Authentication error", 
+				message: "Google Sheets authentication failed. Check service account credentials."
+			});
+		}
+		
+		res.status(500).json({ 
+			error: "Internal server error", 
+			message: e?.message || "Unknown error",
+			details: process.env.NODE_ENV === 'development' ? e?.stack : undefined
+		});
 	}
 });
 
