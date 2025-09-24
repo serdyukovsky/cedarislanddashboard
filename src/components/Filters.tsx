@@ -12,12 +12,30 @@ interface Props {
 }
 
 export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange }: Props) {
-	const [from, setFrom] = useState(defaultFrom);
-	const [to, setTo] = useState(defaultTo);
+	// Если не переданы даты, устанавливаем текущий месяц по умолчанию
+	const getDefaultDates = () => {
+		if (defaultFrom && defaultTo) {
+			return { from: defaultFrom, to: defaultTo };
+		}
+		
+		const now = new Date();
+		const year = now.getFullYear();
+		const month = now.getMonth() + 1;
+		const firstDay = `${year}-${month.toString().padStart(2, '0')}-01`;
+		const lastDayDate = new Date(year, month, 0);
+		const lastDay = `${lastDayDate.getFullYear()}-${(lastDayDate.getMonth() + 1).toString().padStart(2, '0')}-${lastDayDate.getDate().toString().padStart(2, '0')}`;
+		
+		return { from: firstDay, to: lastDay };
+	};
+
+	const defaultDates = getDefaultDates();
+	
+	const [from, setFrom] = useState(defaultDates.from);
+	const [to, setTo] = useState(defaultDates.to);
 	const [unit, setUnit] = useState<"all" | BusinessUnit>(defaultUnit);
 	const [isManualInput, setIsManualInput] = useState(false);
-	const [pendingFrom, setPendingFrom] = useState(defaultFrom);
-	const [pendingTo, setPendingTo] = useState(defaultTo);
+	const [pendingFrom, setPendingFrom] = useState(defaultDates.from);
+	const [pendingTo, setPendingTo] = useState(defaultDates.to);
 	const [pendingUnit, setPendingUnit] = useState<"all" | BusinessUnit>(defaultUnit);
 
 	// Автоматическое обновление только для быстрых фильтров (месяц, год, все время)
@@ -130,6 +148,30 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 		return months;
 	};
 
+	const isCurrentMonth = () => {
+		if (!from || !to) return false;
+		
+		const now = new Date();
+		const currentYear = now.getFullYear();
+		const currentMonth = now.getMonth();
+		
+		const fromDate = new Date(from);
+		const toDate = new Date(to);
+		
+		// Проверяем, что это текущий месяц
+		const firstDayOfCurrentMonth = new Date(currentYear, currentMonth, 1);
+		const lastDayOfCurrentMonth = new Date(currentYear, currentMonth + 1, 0);
+		
+		// Нормализуем даты для сравнения (убираем время)
+		const fromNormalized = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate());
+		const toNormalized = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate());
+		const firstDayNormalized = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth(), firstDayOfCurrentMonth.getDate());
+		const lastDayNormalized = new Date(lastDayOfCurrentMonth.getFullYear(), lastDayOfCurrentMonth.getMonth(), lastDayOfCurrentMonth.getDate());
+		
+		return fromNormalized.getTime() === firstDayNormalized.getTime() && 
+			   toNormalized.getTime() === lastDayNormalized.getTime();
+	};
+
 	const getSelectedMonthName = () => {
 		if (!from || !to) return "";
 		
@@ -188,14 +230,14 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 			<div className="space-y-3">
 				<div className="grid grid-cols-4 gap-2 sm:gap-3">
 					<Button
-						variant={getSelectedMonthName() ? "default" : "outline"}
+						variant={isCurrentMonth() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentMonth}
-						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
+						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
 					>
 						<Clock className="h-3 w-3 sm:h-4 sm:w-4" />
 						<span className="hidden sm:inline">Текущий месяц</span>
-						<span className="sm:hidden">Месяц</span>
+						<span className="sm:hidden">Сегодня</span>
 					</Button>
 
 					<DropdownMenu>
@@ -203,7 +245,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 							<Button
 								variant={getSelectedMonthName() ? "default" : "outline"}
 								size="sm"
-								className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
+								className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
 							>
 								<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
 								<span className="hidden sm:inline">{getSelectedMonthName() || "Выбрать месяц"}</span>
@@ -231,7 +273,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						variant={getSelectedYearName() ? "default" : "outline"}
 						size="sm"
 						onClick={setCurrentYear}
-						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
+						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
 					>
 						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
 						<span className="hidden sm:inline">{getSelectedYearName() || "Текущий год"}</span>
@@ -242,7 +284,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						variant={isAllTimeSelected() ? "default" : "outline"}
 						size="sm"
 						onClick={setAllTime}
-						className="flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
+						className="flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
 					>
 						<Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
 						<span className="hidden sm:inline">За все время</span>
@@ -256,7 +298,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 				<label className="text-sm font-medium text-muted-foreground">Настройка вручную</label>
 				<div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 					{/* Поле "С даты" */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">С даты</label>
 						<input 
 							type="date" 
@@ -267,7 +309,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Поле "По дату" */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">По дату</label>
 						<input 
 							type="date" 
@@ -277,8 +319,8 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						/>
 					</div>
 
-					{/* Поле "Юнит" и кнопка "Применить" в одной строке на мобильных */}
-					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
+					{/* Поле "Юнит" */}
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">Юнит</label>
 						<div className="relative">
 							<select 
@@ -298,18 +340,17 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Кнопка применения */}
-					<div className="col-span-1 sm:col-span-1 lg:col-span-1">
-						<div className="flex items-end h-full">
-							<Button
-								onClick={applyFilter}
-								disabled={!isManualInput}
-								className="w-full h-10 flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
-							>
-								<Search className="h-3 w-3 sm:h-4 sm:w-4" />
-								<span className="hidden sm:inline">Применить</span>
-								<span className="sm:hidden">OK</span>
-							</Button>
-						</div>
+					<div className="col-span-1 sm:col-span-1 lg:col-span-1 flex flex-col">
+						<label className="text-sm text-muted-foreground opacity-0">Применить</label>
+						<Button
+							onClick={applyFilter}
+							disabled={!isManualInput}
+							className="w-full h-10 flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+						>
+							<Search className="h-3 w-3 sm:h-4 sm:w-4" />
+							<span className="hidden sm:inline">Применить</span>
+							<span className="sm:hidden">OK</span>
+						</Button>
 					</div>
 				</div>
 			</div>

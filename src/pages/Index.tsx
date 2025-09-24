@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X } from "lucide-react";
+import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X, ArrowUp } from "lucide-react";
 import { Filters } from "@/components/Filters";
 import { useFinanceData } from "@/hooks/useFinanceData";
 import { DailyLines } from "@/components/charts/DailyLines";
@@ -35,6 +35,7 @@ const Index = () => {
   });
   const [showExpenseCategories, setShowExpenseCategories] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
   
   // Закрытие мобильного меню при клике вне его
@@ -54,6 +55,25 @@ const Index = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobileMenuOpen]);
+
+  // Отслеживание скролла для кнопки "наверх"
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      setShowScrollToTop(scrollTop > 300); // Показываем кнопку после скролла на 300px
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Функция для скролла наверх
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
   
   // Get all data for growth calculation
   const { data: allData } = useFinanceData({ unit: "all" });
@@ -529,20 +549,33 @@ const Index = () => {
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
         <div className="flex items-center justify-between gap-4">
           {/* Логотип */}
-            <div className="flex items-center gap-3">
-              <img 
-                src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
-                alt="Кедровый Остров" 
-              className="h-10 sm:h-12 w-auto brightness-0"
-              />
-            <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-8 sm:-mt-10">
-                    <BarChart3 className="h-3 w-3" />
-              <span className="hidden sm:inline">Dashboard</span>
+          <div className="flex items-center gap-3 sm:hidden"> {/* Hide on desktop */}
+            <img 
+              src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
+              alt="Кедровый Остров" 
+              className="h-10 w-auto brightness-0"
+            />
+            <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-8">
               <span className="sm:hidden">Dash</span>
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 ml-1">
-                      <Zap className="h-3 w-3" />
-                    </span>
-                  </div>
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 ml-1">
+                <Zap className="h-3 w-3" />
+              </span>
+            </div>
+          </div>
+          
+          {/* Логотип для десктопа */}
+          <div className="hidden sm:flex items-center gap-3">
+            <img 
+              src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
+              alt="Кедровый Остров" 
+              className="h-12 w-auto brightness-0"
+            />
+            <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-10">
+              <span className="hidden sm:inline">Dashboard</span>
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 ml-1">
+                <Zap className="h-3 w-3" />
+              </span>
+            </div>
           </div>
           
           {/* Меню навигации */}
@@ -563,56 +596,6 @@ const Index = () => {
               </a>
             </div>
             
-            {/* Мобильное меню */}
-            <div className="sm:hidden relative mobile-menu-container ml-auto">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="mobile-menu-button text-sm font-medium text-muted-foreground transition-colors cursor-pointer"
-                aria-label="Открыть меню"
-              >
-                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-              
-              {/* Выпадающее меню */}
-              {isMobileMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  <div className="py-2">
-                    <a 
-                      href="#" 
-                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Сводно
-                    </a>
-                    <a 
-                      href="#" 
-                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Операции
-                    </a>
-                    <a 
-                      href="#" 
-                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      О приложении
-                    </a>
-                    <a 
-                      href="#" 
-                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
-                      title="Профиль пользователя"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4" />
-                        Профиль
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
           </nav>
         </div>
         
@@ -639,7 +622,7 @@ const Index = () => {
           <div className="flex justify-between items-start gap-4">
             <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
             <div className="hidden sm:block">
-              <ProfitQuotes />
+            <ProfitQuotes />
             </div>
           </div>
           
@@ -654,11 +637,11 @@ const Index = () => {
         {/* Блок операционной прибыли */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Общая прибыль - выделенная карточка */}
-          <Card className="shadow-card border-2 border-success/20 bg-gradient-to-br from-success/5 to-success/10 col-span-1 md:col-span-2 lg:col-span-2">
+          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl col-span-1 md:col-span-2 lg:col-span-2" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
-              <CardTitle className="text-base font-semibold text-success">Общая прибыль</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-300">Общая прибыль</CardTitle>
               {loading ? (
-                <Loader2 className="h-4 w-4 text-success animate-spin" />
+                <Loader2 className="h-4 w-4 text-primary animate-spin" />
               ) : (
                 <DollarSign className="h-4 w-4 text-success" />
               )}
@@ -667,10 +650,10 @@ const Index = () => {
               <AnimatedNumber 
                 value={Number(totals.total - totals.expenseTotal) || 0} 
                 loading={loading}
-                className="text-2xl font-bold text-success"
+                className="text-2xl font-bold text-white"
                 suffix=" ₽"
               />
-              {!loading && <p className="text-sm text-success/70 mt-2">{formatSelectedPeriod()}</p>}
+              {!loading && <p className="text-sm text-gray-400 mt-2">{formatSelectedPeriod()}</p>}
             </CardContent>
           </Card>
           <Card className={`shadow-card border-l-4 border-l-hotel ${(totals.hotel - totals.hotelExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
@@ -808,7 +791,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-2xl" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'}}>
+          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общая выручка</CardTitle>
               {loading ? (
@@ -945,7 +928,7 @@ const Index = () => {
 
         {/* Блок расходов */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-2xl" style={{boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)'}}>
+          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общие расходы</CardTitle>
               {loading ? (
@@ -1283,6 +1266,76 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+        {/* Зафиксированное мобильное меню */}
+        <div className="sm:hidden fixed top-3 right-4 z-50">
+          <div className="relative mobile-menu-container">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="mobile-menu-button w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-foreground shadow-xl hover:bg-white/30 hover:scale-110 active:scale-95 active:bg-white/20 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-0"
+              aria-label="Открыть меню"
+            >
+              <div className={`transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-180' : 'rotate-0'}`}>
+                {isMobileMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+              </div>
+            </button>
+            
+            {/* Выпадающее меню с анимацией */}
+            <div className={`absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-all duration-300 ease-in-out transform ${
+              isMobileMenuOpen 
+                ? 'opacity-100 scale-100 translate-y-0' 
+                : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+            }`}>
+              <div className="py-2">
+                <a 
+                  href="#" 
+                  className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Сводно
+                </a>
+                <a 
+                  href="#" 
+                  className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Операции
+                </a>
+                <a 
+                  href="#" 
+                  className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  О приложении
+                </a>
+                <a 
+                  href="#" 
+                  className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
+                  title="Профиль пользователя"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    Профиль
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Кнопка "Scroll to Top" - только для мобильной версии */}
+        {showScrollToTop && (
+          <div className="fixed bottom-6 right-6 z-50 sm:hidden">
+            <button
+              onClick={scrollToTop}
+              className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-foreground shadow-xl hover:bg-white/30 hover:scale-110 active:scale-95 active:bg-white/20 transition-all duration-300 flex items-center justify-center focus:outline-none focus:ring-0"
+              aria-label="Прокрутить наверх"
+            >
+              <ArrowUp className="h-6 w-6" />
+            </button>
+          </div>
+        )}
     </div>
   );
 };

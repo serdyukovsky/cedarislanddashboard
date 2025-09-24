@@ -45,6 +45,77 @@
                   font-display: block !important;
                 }
               }
+
+              /* Scroll to top button styles */
+              button[aria-label="Прокрутить наверх"] {
+                outline: none !important;
+                border: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+              
+              button[aria-label="Прокрутить наверх"]:active,
+              button[aria-label="Прокрутить наверх"]:focus,
+              button[aria-label="Прокрутить наверх"]:focus-visible {
+                outline: none !important;
+                border: none !important;
+                background: rgba(255, 255, 255, 0.2) !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+
+              /* Shadow press effect for filter buttons */
+              .shadow-press {
+                position: relative;
+                border-radius: 20px;
+                transition: all 0.2s ease-in-out;
+                outline: none !important;
+                -webkit-tap-highlight-color: transparent !important;
+                -webkit-user-select: none !important;
+                -moz-user-select: none !important;
+                -ms-user-select: none !important;
+                user-select: none !important;
+              }
+              
+              .shadow-press:active,
+              .shadow-press:focus,
+              .shadow-press:not(:disabled):active,
+              .shadow-press:not(:disabled):focus {
+                background-color: rgba(255, 255, 255, 0.11) !important;
+                border: none !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.11) !important;
+                transform: scale(0.98);
+              }
+
+              .shadow-press:hover {
+                background-color: transparent !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
+
+              /* Remove all button states that could show blue */
+              button.shadow-press {
+                outline: none !important;
+                color: inherit !important;
+                -webkit-tap-highlight-color: transparent !important;
+              }
+
+              button.shadow-press:hover {
+                background-color: transparent !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+              }
+
+              /* Ensure shadow press effect works on all buttons */
+              button.shadow-press:active,
+              button.shadow-press:focus,
+              button.shadow-press:not(:disabled):active,
+              button.shadow-press:not(:disabled):focus {
+                background-color: rgba(255, 255, 255, 0.11) !important;
+                border: none !important;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.11) !important;
+                transform: scale(0.98) !important;
+              }
             </style>
     <title>Дашборд выручки компании</title>
     <meta name="description" content="Корпоративный дашборд для отслеживания выручки по бизнес-юнитам" />

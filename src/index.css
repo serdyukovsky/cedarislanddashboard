@@ -161,11 +161,6 @@ All colors MUST be HSL.
       font-weight: 400 !important;
       font-display: block !important;
     }
-    
-    /* Force font loading for all headings on mobile */
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
-    }
   }
 
   /* Remove yellow autofill background - AGGRESSIVE */
@@ -235,19 +230,100 @@ All colors MUST be HSL.
             -moz-appearance: none !important;
           }
 
-          /* Specific styles for navigation buttons */
-          button.mobile-menu-button {
-            border: none !important;
-            background: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            outline: none !important;
-            box-shadow: none !important;
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-          }
+  /* Specific styles for navigation buttons */
+  button.mobile-menu-button {
+    border: none !important;
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    color: inherit !important;
+  }
   
+  button.mobile-menu-button:active,
+  button.mobile-menu-button:focus,
+  button.mobile-menu-button:focus-visible {
+    color: inherit !important;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Specific styles for scroll-to-top button */
+  button[aria-label="Прокрутить наверх"] {
+    outline: none !important;
+    border: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  button[aria-label="Прокрутить наверх"]:active,
+  button[aria-label="Прокрутить наверх"]:focus,
+  button[aria-label="Прокрутить наверх"]:focus-visible {
+    outline: none !important;
+    border: none !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Shadow press effect for filter buttons */
+  .shadow-press {
+    position: relative;
+    border-radius: 20px;
+    transition: all 0.2s ease-in-out;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+  
+  .shadow-press:active,
+  .shadow-press:focus,
+  .shadow-press:not(:disabled):active,
+  .shadow-press:not(:disabled):focus {
+    background-color: rgba(255, 255, 255, 0.11) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.11) !important;
+    transform: scale(0.98);
+  }
+
+  .shadow-press:hover {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove all button states that could show blue */
+  button.shadow-press {
+    outline: none !important;
+    color: inherit !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  button.shadow-press:hover {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure shadow press effect works on all buttons */
+  button.shadow-press:active,
+  button.shadow-press:focus,
+  button.shadow-press:not(:disabled):active,
+  button.shadow-press:not(:disabled):focus {
+    background-color: rgba(255, 255, 255, 0.11) !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.11) !important;
+    transform: scale(0.98) !important;
+  }
+
   /* Glassmorphism effect for tooltips */
   .glassmorphism-tooltip {
     background-color: rgba(255, 255, 255, 0.4) !important;
