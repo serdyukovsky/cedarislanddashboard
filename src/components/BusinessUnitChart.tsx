@@ -64,10 +64,13 @@ export const BusinessUnitChart = ({ data }: BusinessUnitChartProps) => {
             />
             <Tooltip 
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "8px",
-                boxShadow: "var(--shadow-elevated)"
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                borderRadius: '12px',
+                backdropFilter: 'blur(20px)',
+                fontSize: '12px',
+                padding: '8px 12px',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
               }}
               formatter={(value: number) => [`${value.toLocaleString("ru-RU")} ₽`, ""]}
               labelStyle={{ color: "hsl(var(--foreground))" }}

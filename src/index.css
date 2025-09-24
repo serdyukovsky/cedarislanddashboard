@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Angry';
+  src: url('/fonts/angry.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -136,5 +144,22 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .font-angry {
+    font-family: 'Angry', sans-serif;
+  }
+  
+  /* Glassmorphism effect for tooltips */
+  .glassmorphism-tooltip {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    font-size: 12px !important;
+    padding: 8px 12px !important;
   }
 }
