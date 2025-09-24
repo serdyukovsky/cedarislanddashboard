@@ -9,15 +9,30 @@
     <link rel="preload" href="https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff" as="font" type="font/woff" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap" rel="stylesheet">
     <!-- Additional font loading methods for mobile devices -->
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap');
-      
-      /* Ensure font loads early with proper fallbacks */
-      .font-angry {
-        font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
-        font-weight: 900 !important;
-        font-display: swap !important;
-      }
+            <style>
+              @import url('https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap');
+              
+              /* Ensure font loads early with proper fallbacks */
+              .font-angry {
+                font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
+                font-weight: 900 !important;
+                font-display: swap !important;
+              }
+              
+              /* Remove yellow autofill background immediately */
+              input:-webkit-autofill,
+              input:-webkit-autofill:hover,
+              input:-webkit-autofill:focus,
+              input:-webkit-autofill:active,
+              select:-webkit-autofill,
+              select:-webkit-autofill:hover,
+              select:-webkit-autofill:focus,
+              select:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px white inset !important;
+                -webkit-text-fill-color: inherit !important;
+                background-color: white !important;
+                background: white !important;
+              }
       
       /* Multiple font formats for better mobile compatibility */
       @font-face {

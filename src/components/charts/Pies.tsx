@@ -1,7 +1,7 @@
 import type { AggregatedDailyUnit } from "@/server/types";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const COLORS = ["#16a34a", "#2563eb", "#f59e0b"]; 
+const COLORS = ["#16a34a", "#2563eb", "#8b5cf6"]; 
 
 export function RevenuePie({ data }: { data: AggregatedDailyUnit[] }) {
 	let cash = 0, bank = 0, acquiring = 0;

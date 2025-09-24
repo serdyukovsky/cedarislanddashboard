@@ -153,6 +153,28 @@ All colors MUST be HSL.
       font-display: block !important;
     }
   }
+
+  /* Remove yellow autofill background */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus,
+  select:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: inherit !important;
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Remove yellow autofill for Firefox */
+  input:-moz-autofill,
+  select:-moz-autofill {
+    background-color: white !important;
+    background: white !important;
+  }
   
   /* Glassmorphism effect for tooltips */
   .glassmorphism-tooltip {
