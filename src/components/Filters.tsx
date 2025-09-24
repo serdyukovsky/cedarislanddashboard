@@ -296,7 +296,72 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 			{/* Ручные фильтры */}
 			<div className="space-y-3">
 				<label className="text-sm font-medium text-muted-foreground">Настройка вручную</label>
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+				
+				{/* Мобильная версия - две строки */}
+				<div className="block sm:hidden space-y-3">
+					{/* Первая строка: "С даты" и "По дату" */}
+					<div className="grid grid-cols-2 gap-3">
+						<div className="space-y-2 flex flex-col">
+							<label className="text-sm text-muted-foreground">С даты</label>
+							<input 
+								type="date" 
+								value={isManualInput ? (pendingFrom ?? "") : (from ?? "")} 
+								onChange={(e) => handleManualFromChange(e.target.value)} 
+								className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0" 
+							/>
+						</div>
+						<div className="space-y-2 flex flex-col">
+							<label className="text-sm text-muted-foreground">По дату</label>
+							<input 
+								type="date" 
+								value={isManualInput ? (pendingTo ?? "") : (to ?? "")} 
+								onChange={(e) => handleManualToChange(e.target.value)} 
+								className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0" 
+							/>
+						</div>
+					</div>
+					
+					{/* Вторая строка: "Юнит" и кнопка "OK" */}
+					<div className="grid grid-cols-2 gap-3">
+						<div className="space-y-2 flex flex-col">
+							<label className="text-sm text-muted-foreground">Юнит</label>
+							<div className="relative">
+								<select 
+									value={isManualInput ? pendingUnit : unit} 
+									onChange={(e) => handleManualUnitChange(e.target.value as any)} 
+									className="w-full border rounded-lg px-3 py-2 h-10 bg-background text-sm appearance-none pr-10 focus:ring-2 focus:ring-primary focus:border-transparent transition-colors min-w-0"
+								>
+									<option value="all">Все</option>
+									<option value="hotel">Отель и бани</option>
+									<option value="restaurant">Ресторан</option>
+									<option value="spa">Спа-центр</option>
+									<option value="pool">Бассейн</option>
+									<option value="bar">Бар</option>
+								</select>
+								<ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+							</div>
+						</div>
+						<div className="flex flex-col justify-end">
+							<Button
+								onClick={applyFilter}
+								disabled={!isManualInput}
+								className="w-full h-10 flex items-center justify-center gap-1 transition-colors text-xs shadow-lg"
+								style={{
+									backgroundColor: '#111827 !important',
+									borderColor: '#374151 !important',
+									color: '#d1d5db !important',
+									boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4) !important'
+								}}
+							>
+								<Search className="h-3 w-3" />
+								<span>OK</span>
+							</Button>
+						</div>
+					</div>
+				</div>
+				
+				{/* Десктопная версия - одна строка */}
+				<div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 					{/* Поле "С даты" */}
 					<div className="space-y-2 col-span-1 flex flex-col">
 						<label className="text-sm text-muted-foreground">С даты</label>
@@ -345,7 +410,13 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						<Button
 							onClick={applyFilter}
 							disabled={!isManualInput}
-							className="w-full h-10 flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm active:bg-transparent active:text-foreground focus:bg-transparent focus:text-foreground shadow-press"
+							className="w-full h-10 flex items-center gap-1 sm:gap-2 transition-colors text-xs sm:text-sm shadow-lg"
+							style={{
+								backgroundColor: '#111827 !important',
+								borderColor: '#374151 !important',
+								color: '#d1d5db !important',
+								boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4) !important'
+							}}
 						>
 							<Search className="h-3 w-3 sm:h-4 sm:w-4" />
 							<span className="hidden sm:inline">Применить</span>

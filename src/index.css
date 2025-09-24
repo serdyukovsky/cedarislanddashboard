@@ -363,32 +363,49 @@ All colors MUST be HSL.
     padding: 8px 12px !important;
   }
 
-  /* Mobile filter inputs fix */
-  @media (max-width: 640px) {
-    input[type="date"] {
-      min-width: 0 !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-      -webkit-appearance: none !important;
-      -moz-appearance: textfield !important;
-    }
-    
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      width: 20px !important;
-      height: 20px !important;
-      margin: 0 !important;
-    }
-    
-    select {
-      min-width: 0 !important;
-      width: 100% !important;
-      box-sizing: border-box !important;
-    }
-    
-    /* Ensure grid items don't overflow */
-    .grid > div {
-      min-width: 0 !important;
-      overflow: hidden !important;
-    }
-  }
+          /* Mobile filter inputs fix */
+          @media (max-width: 640px) {
+            input[type="date"] {
+              min-width: 0 !important;
+              width: 100% !important;
+              box-sizing: border-box !important;
+              -webkit-appearance: none !important;
+              -moz-appearance: textfield !important;
+            }
+            
+            input[type="date"]::-webkit-calendar-picker-indicator {
+              width: 20px !important;
+              height: 20px !important;
+              margin: 0 !important;
+            }
+            
+            select {
+              min-width: 0 !important;
+              width: 100% !important;
+              box-sizing: border-box !important;
+            }
+            
+            /* Ensure grid items don't overflow */
+            .grid > div {
+              min-width: 0 !important;
+              overflow: hidden !important;
+            }
+          }
+
+          /* Force dark button styles for filter OK button */
+          button:has(span:contains("OK")),
+          button:has(span:contains("Применить")) {
+            background-color: #111827 !important;
+            border-color: #374151 !important;
+            color: #d1d5db !important;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
+          }
+          
+          /* Alternative selector for filter buttons */
+          .bg-white\/10 button[class*="shadow-lg"] {
+            background-color: #111827 !important;
+            border-color: #374151 !important;
+            color: #d1d5db !important;
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
+          }
 }

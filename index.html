@@ -3,6 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Кедровый Остров</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/logo-favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/logo-favicon.svg">
+    
     <link rel="preload" href="/fonts/angry.otf" as="font" type="font/opentype" crossorigin>
     <!-- Additional font loading methods for mobile devices -->
             <style>
@@ -68,27 +75,44 @@
               box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
             }
 
-            /* Mobile-specific scroll button fixes */
-            @media (max-width: 640px) {
-              button[aria-label="Прокрутить наверх"] {
-                -webkit-tap-highlight-color: transparent !important;
-                -webkit-touch-callout: none !important;
-                -webkit-user-select: none !important;
-                -khtml-user-select: none !important;
-                -moz-user-select: none !important;
-                -ms-user-select: none !important;
-                user-select: none !important;
-                background-color: rgba(255, 255, 255, 0.2) !important;
-                color: inherit !important;
-              }
-              
-              button[aria-label="Прокрутить наверх"]:active {
-                background: rgba(255, 255, 255, 0.2) !important;
-                background-color: rgba(255, 255, 255, 0.2) !important;
-                transform: scale(0.95) !important;
-                -webkit-tap-highlight-color: transparent !important;
-              }
-            }
+                      /* Mobile-specific scroll button fixes */
+                      @media (max-width: 640px) {
+                        button[aria-label="Прокрутить наверх"] {
+                          -webkit-tap-highlight-color: transparent !important;
+                          -webkit-touch-callout: none !important;
+                          -webkit-user-select: none !important;
+                          -khtml-user-select: none !important;
+                          -moz-user-select: none !important;
+                          -ms-user-select: none !important;
+                          user-select: none !important;
+                          background-color: rgba(255, 255, 255, 0.2) !important;
+                          color: inherit !important;
+                        }
+                        
+                        button[aria-label="Прокрутить наверх"]:active {
+                          background: rgba(255, 255, 255, 0.2) !important;
+                          background-color: rgba(255, 255, 255, 0.2) !important;
+                          transform: scale(0.95) !important;
+                          -webkit-tap-highlight-color: transparent !important;
+                        }
+                      }
+
+                      /* Force dark button styles for filter OK button */
+                      .bg-white\/10 button[class*="shadow-lg"] {
+                        background-color: #111827 !important;
+                        border-color: #374151 !important;
+                        color: #d1d5db !important;
+                        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
+                      }
+                      
+                      /* Additional selector for filter buttons */
+                      button:has(span:contains("OK")),
+                      button:has(span:contains("Применить")) {
+                        background-color: #111827 !important;
+                        border-color: #374151 !important;
+                        color: #d1d5db !important;
+                        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
+                      }
 
               /* Shadow press effect for filter buttons */
               .shadow-press {

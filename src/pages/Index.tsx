@@ -582,17 +582,17 @@ const Index = () => {
           <nav className="flex items-center gap-8 ml-auto">
             {/* Десктопное меню */}
             <div className="hidden sm:flex items-center gap-8">
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Сводно
-            </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Операции
-            </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              О приложении
-            </a>
+              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Сводно
+              </a>
+              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Операции
+              </a>
+              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                О приложении
+              </a>
               <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
-              <User className="h-5 w-5" />
+                <User className="h-5 w-5" />
               </a>
             </div>
             
