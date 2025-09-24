@@ -3,8 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import { readSheetValues, getSheetMetadata } from "./googleSheets";
-import { parseRevenueRows, normalizeDate, parseExpenseSheet, combineExpensesFromBothSheets, aggregateByDateUnit } from "./transform";
+import { readSheetValues, getSheetMetadata } from "./googleSheets.js";
+import { parseRevenueRows, normalizeDate, parseExpenseSheet, combineExpensesFromBothSheets, aggregateByDateUnit } from "./transform.js";
 
 // Кэш для данных
 interface CacheEntry {

@@ -1,6 +1,6 @@
 import { parseISO, isValid, formatISO } from "date-fns";
 import { z } from "zod";
-import { RevenueRow, ExpenseRow, AggregatedDailyUnit, BusinessUnit } from "./types";
+import { RevenueRow, ExpenseRow, AggregatedDailyUnit, BusinessUnit } from "./types.js";
 
 const UnitMap: Record<string, BusinessUnit> = {
 	"отель и бани": "hotel",
