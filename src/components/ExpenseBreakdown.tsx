@@ -87,15 +87,15 @@ export function ExpenseBreakdown({ data }: Props) {
             {/* Блюрная иконка на фоне */}
             <div className="absolute top-1 right-1 opacity-50 blur-[2px] group-hover:blur-[0px] transition-all duration-300 transform rotate-12">
               <IconComponent className={`h-12 w-12 ${item.color}`} />
-            </div>
+              </div>
             
             <CardContent className="flex flex-col items-start justify-center h-full py-1 relative z-10">
               <CardTitle className="text-xs text-muted-foreground">{item.label}</CardTitle>
               <div className="text-sm font-semibold text-foreground">
                 {Math.round(Number(item.value) || 0).toLocaleString("ru-RU")} ₽
-              </div>
-            </CardContent>
-          </Card>
+        </div>
+      </CardContent>
+    </Card>
         );
       })}
     </div>

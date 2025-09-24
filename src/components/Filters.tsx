@@ -186,7 +186,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 		<div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-lg p-4 sm:p-6 space-y-4 sm:space-y-6">
 			{/* Быстрые фильтры */}
 			<div className="space-y-3">
-				<div className="flex flex-wrap gap-2 sm:gap-3">
+				<div className="grid grid-cols-4 gap-2 sm:gap-3">
 					<Button
 						variant={getSelectedMonthName() ? "default" : "outline"}
 						size="sm"
@@ -254,9 +254,9 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 			{/* Ручные фильтры */}
 			<div className="space-y-3">
 				<label className="text-sm font-medium text-muted-foreground">Настройка вручную</label>
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+				<div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 					{/* Поле "С даты" */}
-					<div className="space-y-2">
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
 						<label className="text-sm text-muted-foreground">С даты</label>
 						<input 
 							type="date" 
@@ -267,7 +267,7 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Поле "По дату" */}
-					<div className="space-y-2">
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
 						<label className="text-sm text-muted-foreground">По дату</label>
 						<input 
 							type="date" 
@@ -277,8 +277,8 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 						/>
 					</div>
 
-					{/* Поле "Юнит" */}
-					<div className="space-y-2">
+					{/* Поле "Юнит" и кнопка "Применить" в одной строке на мобильных */}
+					<div className="space-y-2 col-span-1 sm:col-span-1 lg:col-span-1">
 						<label className="text-sm text-muted-foreground">Юнит</label>
 						<div className="relative">
 							<select 
@@ -298,17 +298,18 @@ export function Filters({ defaultFrom, defaultTo, defaultUnit = "all", onChange 
 					</div>
 
 					{/* Кнопка применения */}
-					<div className="space-y-2 sm:col-span-2 lg:col-span-1">
-						<label className="text-sm text-muted-foreground opacity-0">Применить</label>
-						<Button
-							onClick={applyFilter}
-							disabled={!isManualInput}
-							className="w-full h-10 flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
-						>
-							<Search className="h-3 w-3 sm:h-4 sm:w-4" />
-							<span className="hidden sm:inline">Применить</span>
-							<span className="sm:hidden">OK</span>
-						</Button>
+					<div className="col-span-1 sm:col-span-1 lg:col-span-1">
+						<div className="flex items-end h-full">
+							<Button
+								onClick={applyFilter}
+								disabled={!isManualInput}
+								className="w-full h-10 flex items-center gap-1 sm:gap-2 hover:bg-blue-600 hover:text-white transition-colors text-xs sm:text-sm"
+							>
+								<Search className="h-3 w-3 sm:h-4 sm:w-4" />
+								<span className="hidden sm:inline">Применить</span>
+								<span className="sm:hidden">OK</span>
+							</Button>
+						</div>
 					</div>
 				</div>
 			</div>

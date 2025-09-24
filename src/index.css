@@ -207,11 +207,37 @@ All colors MUST be HSL.
     box-shadow: 0 0 0px 1000px white inset !important;
   }
 
-  /* Force white background on all form elements */
-  input, select, textarea {
-    background-color: #ffffff !important;
-    background: #ffffff !important;
-  }
+          /* Force white background on all form elements */
+          input, select, textarea {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+          }
+
+          /* Remove all button styles */
+          button {
+            border: none !important;
+            background: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            outline: none !important;
+            box-shadow: none !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+          }
+
+          /* Specific styles for navigation buttons */
+          button.mobile-menu-button {
+            border: none !important;
+            background: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            outline: none !important;
+            box-shadow: none !important;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+          }
   
   /* Glassmorphism effect for tooltips */
   .glassmorphism-tooltip {

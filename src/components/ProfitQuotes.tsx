@@ -23,8 +23,8 @@ export const ProfitQuotes: React.FC = () => {
   }, []);
 
   return (
-    <div className="text-right">
-      <div className="max-w-md ml-auto min-h-[3rem] flex items-center justify-end">
+    <div className="text-right sm:text-right">
+      <div className="max-w-md mx-auto sm:ml-auto sm:mr-0 min-h-[3rem] flex items-center justify-center sm:justify-end">
         <AnimatePresence mode="wait">
           <motion.p
             key={currentQuoteIndex}

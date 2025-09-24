@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap } from "lucide-react";
+import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X } from "lucide-react";
 import { Filters } from "@/components/Filters";
 import { useFinanceData } from "@/hooks/useFinanceData";
 import { DailyLines } from "@/components/charts/DailyLines";
@@ -34,7 +34,26 @@ const Index = () => {
     unit: "all"
   });
   const [showExpenseCategories, setShowExpenseCategories] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
+  
+  // Закрытие мобильного меню при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isMobileMenuOpen && !target.closest('.mobile-menu-container')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
   
   // Get all data for growth calculation
   const { data: allData } = useFinanceData({ unit: "all" });
@@ -508,27 +527,28 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white p-3 sm:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 lg:space-y-12">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          <div className="w-full lg:w-auto">
+        <div className="flex items-center justify-between gap-4">
+          {/* Логотип */}
             <div className="flex items-center gap-3">
               <img 
                 src="https://static.tildacdn.com/tild3136-6132-4665-b939-316466376231/logo.svg" 
                 alt="Кедровый Остров" 
-                className="h-10 sm:h-12 w-auto brightness-0"
+              className="h-10 sm:h-12 w-auto brightness-0"
               />
-                  <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-8 sm:-mt-10">
+            <div className="inline-flex items-start gap-1 px-2 py-1 rounded-full text-xs font-medium bg-muted text-muted-foreground border -mt-8 sm:-mt-10">
                     <BarChart3 className="h-3 w-3" />
-                    <span className="hidden sm:inline">Dashboard</span>
-                    <span className="sm:hidden">Dash</span>
+              <span className="hidden sm:inline">Dashboard</span>
+              <span className="sm:hidden">Dash</span>
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800 ml-1">
                       <Zap className="h-3 w-3" />
                     </span>
                   </div>
-            </div>
           </div>
           
           {/* Меню навигации */}
-          <nav className="flex items-center gap-8">
+          <nav className="flex items-center gap-8 ml-auto">
+            {/* Десктопное меню */}
+            <div className="hidden sm:flex items-center gap-8">
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Сводно
             </a>
@@ -538,9 +558,61 @@ const Index = () => {
             <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               О приложении
             </a>
-            <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
+              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
               <User className="h-5 w-5" />
-            </a>
+              </a>
+            </div>
+            
+            {/* Мобильное меню */}
+            <div className="sm:hidden relative mobile-menu-container ml-auto">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="mobile-menu-button text-sm font-medium text-muted-foreground transition-colors cursor-pointer"
+                aria-label="Открыть меню"
+              >
+                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+              
+              {/* Выпадающее меню */}
+              {isMobileMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                  <div className="py-2">
+                    <a 
+                      href="#" 
+                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Сводно
+                    </a>
+                    <a 
+                      href="#" 
+                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Операции
+                    </a>
+                    <a 
+                      href="#" 
+                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      О приложении
+                    </a>
+                    <a 
+                      href="#" 
+                      className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors"
+                      title="Профиль пользователя"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        Профиль
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
         
@@ -552,14 +624,23 @@ const Index = () => {
           />
         </div>
 
+        {/* Блок с цитатами - только для мобильной версии */}
+        <div className="sm:hidden max-w-6xl mx-auto mt-6">
+          <div className="text-center">
+            <ProfitQuotes />
+          </div>
+        </div>
+
         {/* Отступ между фильтром и операционной прибылью */}
-        <div className="h-12 sm:h-16 lg:h-20"></div>
+        <div className="hidden sm:block h-16 lg:h-20"></div>
 
         {/* Заголовок блока операционной прибыли */}
         <div className="mb-4">
           <div className="flex justify-between items-start gap-4">
             <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
-            <ProfitQuotes />
+            <div className="hidden sm:block">
+              <ProfitQuotes />
+            </div>
           </div>
           
           {/* Информационный блок */}
