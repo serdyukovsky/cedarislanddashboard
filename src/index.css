@@ -138,6 +138,16 @@ All colors MUST be HSL.
   }
 }
 
+/* Local font face declaration */
+@font-face {
+  font-family: 'Angry';
+  src: url('/fonts/angry.woff2') format('woff2'),
+       url('/fonts/angry.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
 @layer utilities {
   .font-angry {
     font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif;

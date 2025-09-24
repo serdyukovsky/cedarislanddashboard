@@ -3,15 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff" as="font" type="font/woff" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap" rel="stylesheet">
+    <link rel="preload" href="/fonts/angry.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/angry.woff" as="font" type="font/woff" crossorigin>
     <!-- Additional font loading methods for mobile devices -->
             <style>
-              @import url('https://fonts.googleapis.com/css2?family=Angry:wght@400&display=swap');
-              
               /* Ensure font loads early with proper fallbacks */
               .font-angry {
                 font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
@@ -42,75 +37,16 @@
                 background-image: none !important;
                 box-shadow: 0 0 0px 1000px white inset !important;
               }
-      
-      /* Multiple font formats for better mobile compatibility */
-      @font-face {
-        font-family: 'Angry';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff2') format('woff2'),
-             url('https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff') format('woff'),
-             url('https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.ttf') format('truetype');
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-      }
-      
-      /* Force font loading on mobile */
-      @media (max-width: 768px) {
-        .font-angry {
-          font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
-          font-weight: 900 !important;
-          font-display: block !important;
-        }
-      }
-    </style>
-            <script>
-              // Force font loading on mobile devices
-              (function() {
-                // Always load font for mobile devices
-                const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                
-                if (isMobile) {
-                  console.log('Mobile device detected, loading Angry font...');
-                  
-                  // Add multiple font loading methods
-                  const fontLink = document.createElement('link');
-                  fontLink.rel = 'stylesheet';
-                  fontLink.href = 'https://fonts.googleapis.com/css2?family=Angry:wght@400&display=block';
-                  document.head.appendChild(fontLink);
-                  
-                  // Preload font files with multiple formats
-                  const preloads = [
-                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff2', type: 'font/woff2' },
-                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.woff', type: 'font/woff' },
-                    { href: 'https://fonts.gstatic.com/s/angry/v14/gokvH6D8UQY0Oj7hD8b0.ttf', type: 'font/truetype' }
-                  ];
-                  
-                  preloads.forEach(preload => {
-                    const link = document.createElement('link');
-                    link.rel = 'preload';
-                    link.as = 'font';
-                    link.type = preload.type;
-                    link.href = preload.href;
-                    link.crossOrigin = 'anonymous';
-                    document.head.appendChild(link);
-                  });
-                  
-                  // Force font application after loading
-                  setTimeout(() => {
-                    const style = document.createElement('style');
-                    style.textContent = `
-                      .font-angry {
-                        font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
-                        font-weight: 900 !important;
-                      }
-                    `;
-                    document.head.appendChild(style);
-                    console.log('Angry font styles applied for mobile');
-                  }, 1000);
+              
+              /* Force font loading on mobile */
+              @media (max-width: 768px) {
+                .font-angry {
+                  font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
+                  font-weight: 900 !important;
+                  font-display: block !important;
                 }
-              })();
-            </script>
+              }
+            </style>
     <title>Дашборд выручки компании</title>
     <meta name="description" content="Корпоративный дашборд для отслеживания выручки по бизнес-юнитам" />
     <meta name="author" content="Lovable" />
