@@ -448,5 +448,35 @@ All colors MUST be HSL.
           
           svg *:focus {
             outline: none !important;
-  }
+          }
+          
+          /* Pie chart animation for active segments */
+          .recharts-pie-sector[data-active="true"] {
+            transform: translate(var(--offset-x, 0), var(--offset-y, 0)) !important;
+            transition: transform 0.4s ease-in-out !important;
+          }
+
+          /* Custom pie chart cell animation */
+          .pie-cell-active {
+            transform: translate(var(--offset-x, 0), var(--offset-y, 0)) !important;
+            transition: transform 0.4s ease-in-out !important;
+          }
+
+          /* Force animation on all pie chart cells */
+          .recharts-pie-sector {
+            transition: all 0.4s ease-in-out !important;
+            transform-origin: center !important;
+          }
+
+          /* Animation for SVG path elements */
+          .recharts-pie-sector path {
+            transition: transform 0.4s ease-in-out !important;
+            transform-origin: center !important;
+          }
+
+          /* Specific animation for active pie cells */
+          .recharts-pie-sector[class*="pie-cell-active"] {
+            transition: transform 0.4s ease-in-out !important;
+            transform-origin: center !important;
+          }
 }

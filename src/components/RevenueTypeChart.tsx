@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useState } from "react";
 
 interface RevenueData {
   date: string;
@@ -35,6 +36,10 @@ const NAMES = {
 };
 
 export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [showCustomTooltip, setShowCustomTooltip] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState<any>(null);
+  
   // Группируем данные по типам оплаты
   const allTypes = ["cash", "bank", "card", "legal-account", "personal-account", "online-payment", "terminal", "hotel-cash"];
   const chartData = allTypes.map(type => ({
@@ -44,6 +49,63 @@ export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
   })).filter(item => item.value > 0);
 
   const total = chartData.reduce((sum, item) => sum + item.value, 0);
+
+  const handleLegendClick = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+    
+    // Показываем подсказку при клике на легенду
+    if (activeIndex !== index) {
+      const total = chartData.reduce((sum, item) => sum + item.value, 0);
+      const percentage = total > 0 ? ((chartData[index].value / total) * 100).toFixed(1) : 0;
+      
+      setTooltipContent({
+        name: chartData[index].name,
+        value: chartData[index].value,
+        percentage: percentage,
+        color: COLORS[chartData[index].type as keyof typeof COLORS]
+      });
+      setShowCustomTooltip(true);
+      
+      // Автоматически скрываем через 3 секунды
+      setTimeout(() => {
+        setShowCustomTooltip(false);
+      }, 3000);
+    } else {
+      setShowCustomTooltip(false);
+    }
+  };
+
+  const handlePieClick = (data: any, index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  const CustomLegend = ({ payload }: any) => {
+    return (
+      <div className="flex justify-center gap-4 mt-2 flex-wrap">
+        {payload.map((entry: any, index: number) => (
+          <div
+            key={entry.value}
+            className="flex items-center gap-1 cursor-pointer transition-all duration-200 hover:scale-105"
+            onClick={() => handleLegendClick(index)}
+            style={{
+              opacity: activeIndex !== null && activeIndex !== index ? 0.6 : 1,
+              fontWeight: activeIndex === index ? 'bold' : 'normal'
+            }}
+          >
+            <div
+              className="w-3 h-3 rounded-full transition-all duration-200"
+              style={{ 
+                backgroundColor: entry.color,
+                transform: activeIndex === index ? 'scale(1.2)' : 'scale(1)',
+                boxShadow: activeIndex === index ? `0 0 8px ${entry.color}40` : 'none'
+              }}
+            />
+            <span className="text-xs">{entry.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
     const RADIAN = Math.PI / 180;
@@ -67,12 +129,35 @@ export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
   };
 
   return (
-    <Card className="shadow-elevated">
+    <Card className="shadow-elevated relative">
       <CardHeader>
         <CardTitle className="text-lg font-semibold text-foreground">
           Структура выручки по типам оплаты
         </CardTitle>
       </CardHeader>
+      
+      {/* Кастомная подсказка */}
+      {showCustomTooltip && tooltipContent && (
+        <div 
+          className="absolute z-10 bg-white/90 border border-gray-200 rounded-xl shadow-xl p-3 backdrop-blur-sm"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '12px',
+            minWidth: '120px',
+            textAlign: 'center'
+          }}
+        >
+          <p className="font-medium text-sm mb-1" style={{ color: tooltipContent.color }}>
+            {tooltipContent.name}
+          </p>
+          <p className="text-xs text-gray-600">
+            {tooltipContent.value.toLocaleString("ru-RU")} ₽ ({tooltipContent.percentage}%)
+          </p>
+        </div>
+      )}
+      
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
@@ -83,12 +168,43 @@ export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
               labelLine={false}
               label={renderCustomizedLabel}
               outerRadius={80}
+              innerRadius={0}
               fill="#8884d8"
               dataKey="value"
+              stroke="none"
+              strokeWidth={0}
+              onClick={handlePieClick}
+              activeIndex={activeIndex}
             >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[entry.type as keyof typeof COLORS]} />
-              ))}
+              {chartData.map((entry, index) => {
+                const isActive = activeIndex === index;
+                const RADIAN = Math.PI / 180;
+                // Вычисляем средний угол для этой дольки
+                const totalValue = chartData.reduce((sum, item) => sum + item.value, 0);
+                const startAngle = chartData.slice(0, index).reduce((sum, item) => sum + (item.value / totalValue) * 360, 0);
+                const endAngle = startAngle + (chartData[index].value / totalValue) * 360;
+                const midAngle = (startAngle + endAngle) / 2;
+                
+                const sin = Math.sin(-RADIAN * midAngle);
+                const cos = Math.cos(-RADIAN * midAngle);
+                
+                // Анимация выезжания только для активного элемента
+                const offsetX = isActive ? cos * 15 : 0;
+                const offsetY = isActive ? sin * 15 : 0;
+                
+                return (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={COLORS[entry.type as keyof typeof COLORS]}
+                    style={{
+                      cursor: 'pointer',
+                      filter: activeIndex !== null && !isActive ? 'opacity(0.6)' : 'none',
+                      transition: 'all 0.4s ease',
+                      transform: `translate(${offsetX}px, ${offsetY}px)`
+                    }}
+                  />
+                );
+              })}
             </Pie>
             <Tooltip 
               contentStyle={{
@@ -103,12 +219,7 @@ export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
               ]}
               labelStyle={{ color: "hsl(var(--foreground))" }}
             />
-            <Legend 
-              wrapperStyle={{ 
-                paddingTop: "20px",
-                fontSize: "12px"
-              }}
-            />
+            <Legend content={<CustomLegend />} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>

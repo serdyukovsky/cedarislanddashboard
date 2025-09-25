@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import type { AggregatedDailyUnit } from "@/server/types";
+import { useState } from "react";
 
 interface Props {
   data: AggregatedDailyUnit[];
@@ -23,6 +24,10 @@ function formatCategoryName(categoryName: string): string {
 }
 
 export function ExpenseCategoriesPie({ data }: Props) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [showCustomTooltip, setShowCustomTooltip] = useState(false);
+  const [tooltipContent, setTooltipContent] = useState<any>(null);
+  
   // Собираем все категории расходов из данных
   const categoryStats = new Map<string, number>();
   
@@ -119,9 +124,38 @@ export function ExpenseCategoriesPie({ data }: Props) {
     );
   };
   
+  const handleLegendClick = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+    
+    // Показываем подсказку при клике на легенду
+    if (activeIndex !== index) {
+      const total = chartData.reduce((sum, item) => sum + item.value, 0);
+      const percentage = total > 0 ? ((chartData[index].value / total) * 100).toFixed(1) : 0;
+      
+      setTooltipContent({
+        name: chartData[index].name,
+        value: chartData[index].value,
+        percentage: percentage,
+        color: chartData[index].color
+      });
+      setShowCustomTooltip(true);
+      
+      // Автоматически скрываем через 3 секунды
+      setTimeout(() => {
+        setShowCustomTooltip(false);
+      }, 3000);
+    } else {
+      setShowCustomTooltip(false);
+    }
+  };
+
+  const handlePieClick = (data: any, index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
   if (chartData.length === 0) {
     return (
-      <div className="border rounded-lg p-3 bg-card">
+      <div className="border rounded-lg p-3 bg-card relative">
         <h3 className="font-semibold mb-2 text-center text-sm sm:text-base">Распределение расходов по категориям</h3>
         <div className="flex items-center justify-center h-48 sm:h-56">
           <p className="text-muted-foreground text-xs sm:text-sm">Нет данных о расходах для отображения</p>
@@ -131,8 +165,30 @@ export function ExpenseCategoriesPie({ data }: Props) {
   }
   
   return (
-    <div className="border rounded-lg p-3 bg-card">
+    <div className="border rounded-lg p-3 bg-card relative">
       <h3 className="font-semibold mb-2 text-center text-sm sm:text-base">Распределение расходов по категориям</h3>
+      
+      {/* Кастомная подсказка */}
+      {showCustomTooltip && tooltipContent && (
+        <div 
+          className="absolute z-10 bg-white/90 border border-gray-200 rounded-xl shadow-xl p-3 backdrop-blur-sm"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '12px',
+            minWidth: '120px',
+            textAlign: 'center'
+          }}
+        >
+          <p className="font-medium text-sm mb-1" style={{ color: tooltipContent.color }}>
+            {tooltipContent.name}
+          </p>
+          <p className="text-xs text-gray-600">
+            {tooltipContent.value.toLocaleString("ru-RU")} ₽ ({tooltipContent.percentage}%)
+          </p>
+        </div>
+      )}
       <div className="h-48 sm:h-56">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -143,14 +199,43 @@ export function ExpenseCategoriesPie({ data }: Props) {
               labelLine={false}
               label={renderCustomizedLabel}
               outerRadius={80}
+              innerRadius={0}
               fill="#8884d8"
               dataKey="value"
               stroke="none"
               strokeWidth={0}
+              onClick={handlePieClick}
+              activeIndex={activeIndex}
             >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
+              {chartData.map((entry, index) => {
+                const isActive = activeIndex === index;
+                const RADIAN = Math.PI / 180;
+                // Вычисляем средний угол для этой дольки
+                const totalValue = chartData.reduce((sum, item) => sum + item.value, 0);
+                const startAngle = chartData.slice(0, index).reduce((sum, item) => sum + (item.value / totalValue) * 360, 0);
+                const endAngle = startAngle + (chartData[index].value / totalValue) * 360;
+                const midAngle = (startAngle + endAngle) / 2;
+                
+                const sin = Math.sin(-RADIAN * midAngle);
+                const cos = Math.cos(-RADIAN * midAngle);
+                
+                // Анимация выезжания только для активного элемента
+                const offsetX = isActive ? cos * 15 : 0;
+                const offsetY = isActive ? sin * 15 : 0;
+                
+                return (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.color}
+                    style={{
+                      cursor: 'pointer',
+                      filter: activeIndex !== null && !isActive ? 'opacity(0.6)' : 'none',
+                      transition: 'all 0.4s ease',
+                      transform: `translate(${offsetX}px, ${offsetY}px)`
+                    }}
+                  />
+                );
+              })}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
           </PieChart>
@@ -160,10 +245,22 @@ export function ExpenseCategoriesPie({ data }: Props) {
       {/* Легенда с категориями */}
       <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
         {chartData.map((item, index) => (
-          <div key={item.name} className="flex items-center gap-2">
+          <div 
+            key={item.name} 
+            className="flex items-center gap-2 cursor-pointer transition-all duration-200 hover:scale-105"
+            onClick={() => handleLegendClick(index)}
+            style={{
+              opacity: activeIndex !== null && activeIndex !== index ? 0.6 : 1,
+              fontWeight: activeIndex === index ? 'bold' : 'normal'
+            }}
+          >
             <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: item.color }}
+              className="w-3 h-3 rounded-full transition-all duration-200"
+              style={{ 
+                backgroundColor: item.color,
+                transform: activeIndex === index ? 'scale(1.2)' : 'scale(1)',
+                boxShadow: activeIndex === index ? `0 0 8px ${item.color}40` : 'none'
+              }}
             />
             <span className="truncate" title={item.name}>
               {item.name}
