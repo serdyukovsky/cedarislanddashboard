@@ -13,14 +13,19 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server/index.ts"
+      "source": "/api/(.*)",
+      "destination": "/server/index.ts"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "server/index.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }
