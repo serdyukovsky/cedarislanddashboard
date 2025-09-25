@@ -143,8 +143,19 @@ All colors MUST be HSL.
   font-family: 'Angry';
   src: url('/fonts/angry.otf') format('opentype');
   font-weight: 400;
-  font-display: swap;
+  font-display: block;
   font-style: normal;
+}
+
+/* Mobile-specific font face declaration */
+@media (max-width: 768px) {
+  @font-face {
+    font-family: 'Angry';
+    src: url('/fonts/angry.otf') format('opentype');
+    font-weight: 400;
+    font-display: block;
+    font-style: normal;
+  }
 }
 
 @layer utilities {
