@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# Dashboard - Кедровый Остров
 
-## Project info
+Финансовый дашборд для отслеживания выручки и расходов по бизнес-юнитам компании "Кедровый Остров".
 
-**URL**: https://lovable.dev/projects/2cf5301b-c1aa-42ca-84f1-5c7845cddda6
+## Описание проекта
 
-## How can I edit this code?
+Этот проект представляет собой корпоративный дашборд для анализа финансовых показателей различных бизнес-направлений компании.
 
-There are several ways of editing your application.
+## Функциональность
 
-**Use Lovable**
+- 📊 Отслеживание выручки по юнитам (Отель, Ресторан, Спа, Бассейн, Бар)
+- 💰 Анализ расходов и прибыли
+- 📈 Визуализация данных с помощью графиков и диаграмм
+- 📱 Адаптивный дизайн для мобильных устройств
+- 🔍 Фильтрация данных по периодам и юнитам
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2cf5301b-c1aa-42ca-84f1-5c7845cddda6) and start prompting.
+## Технологии
 
-Changes made via Lovable will be committed automatically to this repo.
+Проект построен с использованием:
 
-**Use your preferred IDE**
+- ⚡ Vite - быстрый инструмент сборки
+- ⚛️ React - библиотека для пользовательских интерфейсов
+- 🔷 TypeScript - типизированный JavaScript
+- 🎨 Tailwind CSS - CSS-фреймворк
+- 📊 Recharts - библиотека для графиков
+- 🗂️ shadcn/ui - компоненты интерфейса
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Установка и запуск
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Требования
 
-Follow these steps:
+- Node.js (версия 18 или выше)
+- npm или yarn
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+### Шаги установки
+
+```bash
+# 1. Клонируйте репозиторий
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# 2. Перейдите в директорию проекта
+cd uni-profit-tracker
 
-# Step 3: Install the necessary dependencies.
-npm i
+# 3. Установите зависимости
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# 4. Запустите сервер разработки
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Конфигурация
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Проект использует Google Sheets API для получения данных. Настройте переменные окружения в файле `.env.local`:
 
-**Use GitHub Codespaces**
+```env
+REVENUE_SHEET_ID=your_revenue_sheet_id
+EXPENSE_SHEET_ID=your_expense_sheet_id
+GOOGLE_SERVICE_ACCOUNT_KEY=your_service_account_key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Развертывание
 
-## What technologies are used for this project?
+Проект может быть развернут на любой платформе, поддерживающей Node.js, например:
 
-This project is built with:
+- Vercel
+- Netlify
+- Railway
+- Heroku
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Структура проекта
 
-## How can I deploy this project?
+```
+├── src/
+│   ├── components/     # React компоненты
+│   ├── pages/         # Страницы приложения
+│   ├── hooks/         # Пользовательские хуки
+│   └── index.css      # Глобальные стили
+├── server/            # Backend сервер
+├── public/            # Статические файлы
+└── package.json       # Зависимости проекта
+```
 
-Simply open [Lovable](https://lovable.dev/projects/2cf5301b-c1aa-42ca-84f1-5c7845cddda6) and click on Share -> Publish.
+## Лицензия
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Этот проект является корпоративным и предназначен для внутреннего использования компании "Кедровый Остров".

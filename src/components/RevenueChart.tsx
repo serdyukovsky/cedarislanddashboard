@@ -64,7 +64,7 @@ export const RevenueChart = ({ data }: RevenueChartProps) => {
               formatter={(value: number) => [`${value.toLocaleString("ru-RU")} ₽`, ""]}
               labelStyle={{ color: "hsl(var(--foreground))" }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             <Line 
               type="monotone" 
               dataKey="hotel" 

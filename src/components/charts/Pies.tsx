@@ -20,7 +20,14 @@ export function RevenuePie({ data }: { data: AggregatedDailyUnit[] }) {
 			<h3 className="font-semibold mb-2 text-sm sm:text-base">Структура доходов</h3>
 			<ResponsiveContainer width="100%" height={220}>
 				<PieChart>
-					<Pie data={rows} dataKey="value" nameKey="name" outerRadius={80}>
+					<Pie 
+						data={rows} 
+						dataKey="value" 
+						nameKey="name" 
+						outerRadius={80}
+						stroke="none"
+						strokeWidth={0}
+					>
 						{rows.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
 					</Pie>
 					<Tooltip 
@@ -106,7 +113,14 @@ export function ExpensePie({ data }: { data: AggregatedDailyUnit[] }) {
 			<h3 className="font-semibold mb-2 text-sm sm:text-base">Структура расходов</h3>
 			<ResponsiveContainer width="100%" height={220}>
 				<PieChart>
-					<Pie data={rows} dataKey="value" nameKey="name" outerRadius={80}>
+					<Pie 
+						data={rows} 
+						dataKey="value" 
+						nameKey="name" 
+						outerRadius={80}
+						stroke="none"
+						strokeWidth={0}
+					>
 						{rows.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
 					</Pie>
 					<Tooltip 

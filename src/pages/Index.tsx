@@ -588,7 +588,7 @@ const Index = () => {
               <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Операции
               </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 О приложении
               </a>
               <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" title="Профиль пользователя">
@@ -1301,13 +1301,13 @@ const Index = () => {
                 >
                   Операции
                 </a>
-                <a 
-                  href="#" 
-                  className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  О приложении
-                </a>
+                        <a 
+                          href="/about" 
+                          className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          О приложении
+                        </a>
                 <a 
                   href="#" 
                   className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"

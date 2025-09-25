@@ -75,7 +75,7 @@ export const BusinessUnitChart = ({ data }: BusinessUnitChartProps) => {
               formatter={(value: number) => [`${value.toLocaleString("ru-RU")} ₽`, ""]}
               labelStyle={{ color: "hsl(var(--foreground))" }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ fontSize: '12px' }} />
             <Bar 
               dataKey="Наличные" 
               fill="hsl(var(--cash-color))" 

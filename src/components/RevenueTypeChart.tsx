@@ -106,7 +106,7 @@ export const RevenueTypeChart = ({ data }: RevenueTypeChartProps) => {
             <Legend 
               wrapperStyle={{ 
                 paddingTop: "20px",
-                fontSize: "14px"
+                fontSize: "12px"
               }}
             />
           </PieChart>

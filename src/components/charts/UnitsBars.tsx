@@ -40,7 +40,7 @@ export function UnitsBars({ data }: { data: AggregatedDailyUnit[] }) {
 						}}
 						formatter={(v: number) => `${v.toLocaleString("ru-RU")} ₽`} 
 					/>
-					<Legend />
+					<Legend wrapperStyle={{ fontSize: '12px' }} />
 					<Bar dataKey="revenue" name="Доходы" fill="#22c55e" />
 					<Bar dataKey="expense" name="Расходы" fill="#f97316" />
 					<Bar dataKey="profit" name="Прибыль" fill="#3b82f6" />

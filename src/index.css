@@ -231,7 +231,10 @@ All colors MUST be HSL.
           }
 
   /* Specific styles for navigation buttons */
-  button.mobile-menu-button {
+  button.mobile-menu-button,
+  button[aria-label="Назад"],
+  button[aria-label="Открыть на GitHub"],
+  button[aria-label="GitHub Repository"] {
     border: none !important;
     background: none !important;
     padding: 0 !important;
@@ -246,11 +249,32 @@ All colors MUST be HSL.
   
   button.mobile-menu-button:active,
   button.mobile-menu-button:focus,
-  button.mobile-menu-button:focus-visible {
+  button.mobile-menu-button:focus-visible,
+  button[aria-label="Назад"]:active,
+  button[aria-label="Назад"]:focus,
+  button[aria-label="Назад"]:focus-visible,
+  button[aria-label="Открыть на GitHub"]:active,
+  button[aria-label="Открыть на GitHub"]:focus,
+  button[aria-label="Открыть на GitHub"]:focus-visible,
+  button[aria-label="GitHub Repository"]:active,
+  button[aria-label="GitHub Repository"]:focus,
+  button[aria-label="GitHub Repository"]:focus-visible {
     color: inherit !important;
     background: none !important;
     border: none !important;
     outline: none !important;
+  }
+
+  /* Hover shadow effect for back button */
+  button[aria-label="Назад"]:hover {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  /* Hover shadow effect for all glassmorphism buttons */
+  button[aria-label="Назад"]:hover,
+  button[aria-label="Открыть на GitHub"]:hover,
+  button[aria-label="GitHub Repository"]:hover {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.15) !important;
   }
 
   /* Specific styles for scroll-to-top button */
@@ -407,5 +431,30 @@ All colors MUST be HSL.
             border-color: #374151 !important;
             color: #d1d5db !important;
             box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
+          }
+
+          /* Remove outline from pie chart segments */
+          .recharts-pie-sector {
+            outline: none !important;
+            stroke: none !important;
+          }
+          
+          .recharts-pie-sector:focus {
+            outline: none !important;
+            stroke: none !important;
+          }
+          
+          .recharts-pie-sector:active {
+            outline: none !important;
+            stroke: none !important;
+          }
+          
+          /* Remove focus outline from SVG elements */
+          svg:focus {
+            outline: none !important;
+          }
+          
+          svg *:focus {
+            outline: none !important;
           }
 }

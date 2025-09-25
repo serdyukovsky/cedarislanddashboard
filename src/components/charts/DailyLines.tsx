@@ -32,7 +32,7 @@ export function DailyLines({ data }: { data: AggregatedDailyUnit[] }) {
 						}}
 						formatter={(v: number) => `${v.toLocaleString("ru-RU")} ₽`} 
 					/>
-					<Legend />
+					<Legend wrapperStyle={{ fontSize: '12px' }} />
 					<Line type="monotone" dataKey="revenue" name="Доходы" stroke="#16a34a" strokeWidth={2} dot={false} />
 					<Line type="monotone" dataKey="expense" name="Расходы" stroke="#ef4444" strokeWidth={2} dot={false} />
 					<Line type="monotone" dataKey="profit" name="Прибыль" stroke="#2563eb" strokeWidth={2} dot={false} />

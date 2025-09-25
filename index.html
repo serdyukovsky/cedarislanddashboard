@@ -114,6 +114,31 @@
                         box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.4) !important;
                       }
 
+                      /* Remove outline from pie chart segments */
+                      .recharts-pie-sector {
+                        outline: none !important;
+                        stroke: none !important;
+                      }
+                      
+                      .recharts-pie-sector:focus {
+                        outline: none !important;
+                        stroke: none !important;
+                      }
+                      
+                      .recharts-pie-sector:active {
+                        outline: none !important;
+                        stroke: none !important;
+                      }
+                      
+                      /* Remove focus outline from SVG elements */
+                      svg:focus {
+                        outline: none !important;
+                      }
+                      
+                      svg *:focus {
+                        outline: none !important;
+                      }
+
               /* Shadow press effect for filter buttons */
               .shadow-press {
                 position: relative;
@@ -200,16 +225,16 @@
             </style>
     <title>Дашборд выручки компании</title>
     <meta name="description" content="Корпоративный дашборд для отслеживания выручки по бизнес-юнитам" />
-    <meta name="author" content="Lovable" />
+    <meta name="author" content="Кедровый Остров" />
 
-    <meta property="og:title" content="2cf5301b-c1aa-42ca-84f1-5c7845cddda6" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:title" content="Dashboard - Кедровый Остров" />
+    <meta property="og:description" content="Финансовый дашборд Кедровый Остров" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:image" content="/logo-favicon.svg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:site" content="@cedarisland" />
+    <meta name="twitter:image" content="/logo-favicon.svg" />
 
     <!-- Предотвращаем желтый фон при загрузке -->
     <style>

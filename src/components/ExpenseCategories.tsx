@@ -132,18 +132,18 @@ export function ExpenseCategories({ data, periodText = "за выбранный 
           {sortedCategories.map((category, index) => (
             <div key={category.name} className="space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div
-                    className="w-4 h-4 rounded-full"
+                    className="w-4 h-4 rounded-full flex-shrink-0"
                     style={{ backgroundColor: getCategoryColor(index) }}
                   />
-                  <span className="font-medium text-sm">{category.name}</span>
-                  <Badge variant="secondary" className="text-xs">
+                  <span className="font-medium text-sm truncate">{category.name}</span>
+                  <Badge variant="secondary" className="text-xs flex-shrink-0">
                     {category.count} раз
                   </Badge>
                 </div>
-                <div className="text-right">
-                  <div className="font-semibold">
+                <div className="text-right flex-shrink-0 ml-2">
+                  <div className="font-semibold text-sm">
                     {Math.round(category.total).toLocaleString("ru-RU")} ₽
                   </div>
                   <div className="text-xs text-muted-foreground">
@@ -159,8 +159,8 @@ export function ExpenseCategories({ data, periodText = "за выбранный 
                   .sort(([_, a], [__, b]) => b - a)
                   .map(([unit, amount]) => (
                     <div key={unit} className="flex items-center justify-between text-xs">
-                      <span className="text-muted-foreground">{getUnitName(unit)}</span>
-                      <span className="font-medium">
+                      <span className="text-muted-foreground truncate flex-1 min-w-0">{getUnitName(unit)}</span>
+                      <span className="font-medium flex-shrink-0 ml-2">
                         {Math.round(amount).toLocaleString("ru-RU")} ₽
                       </span>
                     </div>
@@ -184,12 +184,12 @@ export function ExpenseCategories({ data, periodText = "за выбранный 
         
         {/* Общая статистика */}
         <div className="mt-6 pt-4 border-t">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div className="flex items-center justify-between sm:justify-start">
               <span className="text-muted-foreground">Всего категорий:</span>
               <span className="ml-2 font-medium">{categoryStats.size}</span>
             </div>
-            <div>
+            <div className="flex items-center justify-between sm:justify-start">
               <span className="text-muted-foreground">Общая сумма:</span>
               <span className="ml-2 font-medium">
                 {Math.round(totalExpenses).toLocaleString("ru-RU")} ₽

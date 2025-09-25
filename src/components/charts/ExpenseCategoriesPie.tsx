@@ -145,6 +145,8 @@ export function ExpenseCategoriesPie({ data }: Props) {
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
+              stroke="none"
+              strokeWidth={0}
             >
               {chartData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
