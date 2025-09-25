@@ -49,16 +49,6 @@
                 .font-angry {
                   font-family: 'Angry', 'Inter', 'Segoe UI', 'Roboto', sans-serif !important;
                   font-weight: 400 !important;
-                  font-display: block !important;
-                }
-                
-                /* Preload font for mobile */
-                @font-face {
-                  font-family: 'Angry';
-                  src: url('/fonts/angry.otf') format('opentype');
-                  font-weight: 400;
-                  font-display: block;
-                  font-style: normal;
                 }
               }
 
@@ -276,29 +266,17 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Force font loading on mobile devices -->
+    <!-- Simple font loading check -->
     <script>
-      // Detect mobile devices
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      if (isMobile) {
-        // Force font loading
-        const font = new FontFace('Angry', 'url(/fonts/angry.otf)');
-        font.load().then(function(loadedFont) {
-          document.fonts.add(loadedFont);
-          console.log('Angry font loaded successfully on mobile');
-          
-          // Force re-render of elements with font-angry class
-          setTimeout(() => {
-            const elements = document.querySelectorAll('.font-angry');
-            elements.forEach(el => {
-              el.style.fontFamily = 'Angry, Inter, Segoe UI, Roboto, sans-serif';
-            });
-          }, 100);
-        }).catch(function(error) {
-          console.error('Failed to load Angry font on mobile:', error);
-        });
-      }
+      // Simple font loading check
+      document.fonts.ready.then(function() {
+        console.log('Fonts loaded');
+        if (document.fonts.check('400 16px Angry')) {
+          console.log('Angry font is available');
+        } else {
+          console.log('Angry font is NOT available');
+        }
+      });
     </script>
   </body>
 </html>
