@@ -14,7 +14,6 @@ import { ExpenseBreakdown } from "@/components/ExpenseBreakdown";
 import { ExpenseCategories } from "@/components/ExpenseCategories";
 import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { ProfitQuotes } from "@/components/ProfitQuotes";
-import { TestPie } from "@/components/charts/TestPie";
 
 const Index = () => {
   // Устанавливаем текущий месяц по умолчанию
@@ -1242,10 +1241,6 @@ const Index = () => {
           <ExpenseCategoriesPie data={data} />
         </div>
 
-        {/* Тестовая диаграмма */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-6">
-          <TestPie />
-        </div>
 
         <div>
           <h2 className="text-xl font-semibold mb-4">Операции</h2>
