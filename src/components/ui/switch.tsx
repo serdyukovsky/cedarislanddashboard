@@ -29,7 +29,7 @@ const Switch = React.forwardRef<
       className={cn(
         "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
         "!appearance-none !-webkit-appearance-none !-moz-appearance-none",
-        "!outline-none !border-none !box-shadow-none",
+        "!outline-none !border-none",
       )}
       style={{
         WebkitAppearance: 'none',
@@ -37,7 +37,6 @@ const Switch = React.forwardRef<
         appearance: 'none',
         outline: 'none',
         border: 'none',
-        boxShadow: 'none',
         backgroundColor: 'white',
       }}
     />

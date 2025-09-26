@@ -497,7 +497,7 @@ All colors MUST be HSL.
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
           }
 
-          /* White thumb for all switches - AGGRESSIVE override */
+          /* White thumb for all switches - keep shadow but remove yellow */
           #profit-breakfast-switch [data-radix-switch-thumb],
           #revenue-breakfast-switch [data-radix-switch-thumb],
           #profit-breakfast-switch-mobile [data-radix-switch-thumb],
@@ -505,7 +505,7 @@ All colors MUST be HSL.
             background-color: white !important;
             background: white !important;
             border: none !important;
-            box-shadow: none !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
           }
 
           /* Override any browser default colors for switches */
@@ -566,7 +566,7 @@ All colors MUST be HSL.
             -webkit-tap-highlight-color: transparent !important;
           }
 
-          /* Override any browser default form colors */
+          /* Override any browser default form colors - but keep shadows */
           input, select, textarea, button, [role="switch"], [role="checkbox"] {
             -webkit-appearance: none !important;
             -moz-appearance: none !important;
@@ -574,18 +574,25 @@ All colors MUST be HSL.
             background-color: transparent !important;
             border: none !important;
             outline: none !important;
-            box-shadow: none !important;
           }
 
-          /* Specific override for switch elements */
-          [data-radix-switch-root],
-          [data-radix-switch-thumb] {
+          /* Specific override for switch elements - but keep shadows */
+          [data-radix-switch-root] {
             -webkit-appearance: none !important;
             -moz-appearance: none !important;
             appearance: none !important;
             background-color: transparent !important;
             border: none !important;
             outline: none !important;
-            box-shadow: none !important;
+          }
+
+          /* Keep thumb shadows but remove yellow colors */
+          [data-radix-switch-thumb] {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-color: white !important;
+            border: none !important;
+            outline: none !important;
           }
 }
