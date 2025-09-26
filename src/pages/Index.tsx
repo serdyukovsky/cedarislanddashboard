@@ -532,6 +532,45 @@ const Index = () => {
 
   const revenueGrowth = calculateRevenueGrowth();
 
+  // Функция для поиска последней записи с данными по выручке
+  const findLastRevenueRecord = () => {
+    if (!Array.isArray(allData) || allData.length === 0) {
+      return null;
+    }
+
+    // Сортируем данные по дате (от новых к старым)
+    const sortedData = [...allData].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    // Ищем последнюю запись с ненулевой выручкой
+    for (const record of sortedData) {
+      const revenue = Number(record?.revenue?.total) || 0;
+      if (revenue > 0) {
+        return {
+          date: record.date,
+          unit: record.unit,
+          revenue: revenue
+        };
+      }
+    }
+    
+    return null;
+  };
+
+  // Проверяем, есть ли данные по выручке в выбранном диапазоне
+  const hasRevenueInRange = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return false;
+    }
+    
+    return data.some(record => {
+      const revenue = Number(record?.revenue?.total) || 0;
+      return revenue > 0;
+    });
+  };
+
+  const lastRevenueRecord = findLastRevenueRecord();
+  const showRevenueEmptyNotification = !hasRevenueInRange() && lastRevenueRecord;
+
   if (error) {
     return (
       <div className="min-h-screen bg-background p-6">
@@ -942,6 +981,38 @@ const Index = () => {
             )}
           </span>
         </div>
+
+        {/* Уведомление о отсутствии данных по выручке */}
+        {showRevenueEmptyNotification && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0">
+                <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                  <span className="text-amber-600 text-sm">⚠️</span>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-amber-800 mb-1">
+                  Нет данных по выручке в выбранном периоде
+                </h3>
+                <p className="text-sm text-amber-700">
+                  В выбранном диапазоне дат ({formatSelectedPeriod()}) отсутствуют данные по выручке.
+                </p>
+                {lastRevenueRecord && (
+                  <p className="text-sm text-amber-700 mt-1">
+                    Последние данные по выручке: <strong>{new Date(lastRevenueRecord.date).toLocaleDateString('ru-RU')}</strong> 
+                    ({lastRevenueRecord.unit === 'hotel' ? 'Отель' : 
+                      lastRevenueRecord.unit === 'restaurant' ? 'Ресторан' : 
+                      lastRevenueRecord.unit === 'spa' ? 'Спа-центр' : 
+                      lastRevenueRecord.unit === 'pool' ? 'Бассейн' : 
+                      lastRevenueRecord.unit === 'bar' ? 'Бар' : lastRevenueRecord.unit}) - 
+                    <strong>{lastRevenueRecord.revenue.toLocaleString()} ₽</strong>
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
