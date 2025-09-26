@@ -686,10 +686,11 @@ const Index = () => {
                 borderRadius: '9999px',
                 backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                transition: 'background-color 0.2s ease',
+                transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 border: 'none',
                 cursor: 'pointer'
-              }}
+              } as React.CSSProperties}
+              className={includeBreakfast ? 'bg-green-600' : 'bg-gray-300'}
             >
               <span
                 style={{
@@ -889,10 +890,11 @@ const Index = () => {
                 borderRadius: '9999px',
                 backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
                 boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-                transition: 'background-color 0.2s ease',
+                transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 border: 'none',
                 cursor: 'pointer'
-              }}
+              } as React.CSSProperties}
+              className={includeBreakfast ? 'bg-green-600' : 'bg-gray-300'}
             >
               <span
                 style={{
