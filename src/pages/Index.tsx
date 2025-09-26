@@ -38,6 +38,12 @@ const Index = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [includeBreakfast, setIncludeBreakfast] = useState(true);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  const handleBreakfastToggle = (checked: boolean) => {
+    setIncludeBreakfast(checked);
+    setForceUpdate(prev => prev + 1);
+  };
   const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
   
   // Закрытие мобильного меню при клике вне его
@@ -626,8 +632,9 @@ const Index = () => {
               <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
               <div className="hidden sm:flex items-center gap-2">
                 <Switch
+                  key={`profit-${forceUpdate}`}
                   checked={includeBreakfast}
-                  onCheckedChange={setIncludeBreakfast}
+                  onCheckedChange={handleBreakfastToggle}
                   id="profit-breakfast-switch"
                   className="shadow-lg"
                   style={{
@@ -653,8 +660,9 @@ const Index = () => {
           {/* Мобильная версия переключателя */}
           <div className="sm:hidden flex items-center gap-2 mb-6">
             <Switch
+              key={`profit-mobile-${forceUpdate}`}
               checked={includeBreakfast}
-              onCheckedChange={setIncludeBreakfast}
+              onCheckedChange={handleBreakfastToggle}
               id="profit-breakfast-switch-mobile"
               className="shadow-lg"
               style={{
@@ -795,8 +803,9 @@ const Index = () => {
               )}
               <div className="hidden sm:flex items-center gap-2">
                 <Switch
+                  key={`revenue-${forceUpdate}`}
                   checked={includeBreakfast}
-                  onCheckedChange={setIncludeBreakfast}
+                  onCheckedChange={handleBreakfastToggle}
                   id="revenue-breakfast-switch"
                   className="shadow-lg"
                   style={{
@@ -812,8 +821,9 @@ const Index = () => {
           {/* Мобильная версия переключателя */}
           <div className="sm:hidden flex items-center gap-2 mt-3">
             <Switch
+              key={`revenue-mobile-${forceUpdate}`}
               checked={includeBreakfast}
-              onCheckedChange={setIncludeBreakfast}
+              onCheckedChange={handleBreakfastToggle}
               id="revenue-breakfast-switch-mobile"
               className="shadow-lg"
               style={{
