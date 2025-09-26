@@ -629,7 +629,10 @@ const Index = () => {
                   checked={includeBreakfast}
                   onCheckedChange={setIncludeBreakfast}
                   id="profit-breakfast-switch"
-                  className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+                  className="shadow-lg"
+                  style={{
+                    backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+                  }}
                 />
                 <label htmlFor="profit-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
                   Включать завтраки
@@ -653,7 +656,10 @@ const Index = () => {
               checked={includeBreakfast}
               onCheckedChange={setIncludeBreakfast}
               id="profit-breakfast-switch-mobile"
-              className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+              className="shadow-lg"
+              style={{
+                backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+              }}
             />
             <label htmlFor="profit-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
               Включать завтраки
@@ -792,7 +798,10 @@ const Index = () => {
                   checked={includeBreakfast}
                   onCheckedChange={setIncludeBreakfast}
                   id="revenue-breakfast-switch"
-                  className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+                  className="shadow-lg"
+                  style={{
+                    backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+                  }}
                 />
                 <label htmlFor="revenue-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
                   Включать завтраки
@@ -806,7 +815,10 @@ const Index = () => {
               checked={includeBreakfast}
               onCheckedChange={setIncludeBreakfast}
               id="revenue-breakfast-switch-mobile"
-              className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+              className="shadow-lg"
+              style={{
+                backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+              }}
             />
             <label htmlFor="revenue-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
               Включать завтраки
