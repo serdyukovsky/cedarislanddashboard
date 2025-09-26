@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Switch } from "@/components/ui/switch";
 import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X, ArrowUp } from "lucide-react";
 import { Filters } from "@/components/Filters";
 import { useFinanceData } from "@/hooks/useFinanceData";
@@ -36,6 +37,7 @@ const Index = () => {
   const [showExpenseCategories, setShowExpenseCategories] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [includeBreakfast, setIncludeBreakfast] = useState(true);
   const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
   
   // Закрытие мобильного меню при клике вне его
@@ -620,17 +622,42 @@ const Index = () => {
         {/* Заголовок блока операционной прибыли */}
         <div className="mb-4">
           <div className="flex justify-between items-start gap-4">
-            <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
+              <div className="hidden sm:flex items-center gap-2">
+                <Switch
+                  checked={includeBreakfast}
+                  onCheckedChange={setIncludeBreakfast}
+                  id="profit-breakfast-switch"
+                  className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+                />
+                <label htmlFor="profit-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
+                  Включать завтраки
+                </label>
+              </div>
+            </div>
             <div className="hidden sm:block">
-            <ProfitQuotes />
+              <ProfitQuotes />
             </div>
           </div>
-          
           {/* Информационный блок */}
           <div className="mt-4 mb-6">
             <p className="text-sm text-muted-foreground leading-relaxed">
               Прибыль компании от её основной деятельности до учёта налогов, процессинга и ЖКХ
             </p>
+          </div>
+          
+          {/* Мобильная версия переключателя */}
+          <div className="sm:hidden flex items-center gap-2 mb-6">
+            <Switch
+              checked={includeBreakfast}
+              onCheckedChange={setIncludeBreakfast}
+              id="profit-breakfast-switch-mobile"
+              className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+            />
+            <label htmlFor="profit-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
+              Включать завтраки
+            </label>
           </div>
         </div>
 
@@ -734,31 +761,56 @@ const Index = () => {
 
         {/* Заголовок блока выручки */}
         <div className="mt-8 mb-4">
-          <div className="flex items-center gap-3">
-            <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Выручка 🔥</h2>
-            {revenueGrowth !== null && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium cursor-help ${
-                      revenueGrowth >= 0 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {revenueGrowth >= 0 ? (
-                        <TrendingUp className="h-3 w-3" />
-                      ) : (
-                        <TrendingUp className="h-3 w-3 rotate-180" />
-                      )}
-                      {revenueGrowth >= 0 ? '+' : ''}{revenueGrowth.toFixed(2)}%
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent className="glassmorphism-tooltip">
-                    <p>Прирост к прошлому месяцу</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-4">
+              <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Выручка 🔥</h2>
+              {revenueGrowth !== null && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium cursor-help ${
+                        revenueGrowth >= 0 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {revenueGrowth >= 0 ? (
+                          <TrendingUp className="h-3 w-3" />
+                        ) : (
+                          <TrendingUp className="h-3 w-3 rotate-180" />
+                        )}
+                        {revenueGrowth >= 0 ? '+' : ''}{revenueGrowth.toFixed(2)}%
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent className="glassmorphism-tooltip">
+                      <p>Прирост к прошлому месяцу</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              <div className="hidden sm:flex items-center gap-2">
+                <Switch
+                  checked={includeBreakfast}
+                  onCheckedChange={setIncludeBreakfast}
+                  id="revenue-breakfast-switch"
+                  className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+                />
+                <label htmlFor="revenue-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
+                  Включать завтраки
+                </label>
+              </div>
+            </div>
+          </div>
+          {/* Мобильная версия переключателя */}
+          <div className="sm:hidden flex items-center gap-2 mt-3">
+            <Switch
+              checked={includeBreakfast}
+              onCheckedChange={setIncludeBreakfast}
+              id="revenue-breakfast-switch-mobile"
+              className="shadow-lg [&[data-state=checked]]:!bg-green-600 [&[data-state=unchecked]]:!bg-gray-200"
+            />
+            <label htmlFor="revenue-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
+              Включать завтраки
+            </label>
           </div>
         </div>
 
