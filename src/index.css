@@ -530,6 +530,60 @@ All colors MUST be HSL.
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
           }
 
+          /* REUSABLE NOTIFICATION POPUP STYLES */
+          .notification-popup {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            z-index: 50;
+            max-width: 24rem;
+          }
+
+          .notification-popup-content {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            padding: 0.5rem;
+            position: relative;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+
+          .notification-close-button {
+            position: static;
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            flex-shrink: 0;
+          }
+
+          .notification-close-button:hover {
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
+
+          .notification-close-button:active,
+          .notification-close-button:focus,
+          .notification-close-button:focus-visible {
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
+
           /* GLOBAL YELLOW COLOR REMOVAL - AGGRESSIVE */
           * {
             -webkit-tap-highlight-color: transparent !important;

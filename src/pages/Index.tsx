@@ -556,20 +556,72 @@ const Index = () => {
     return null;
   };
 
-  // Проверяем, есть ли данные по выручке в выбранном диапазоне
+  // Проверяем, заполнены ли ВСЕ дни в выбранном диапазоне по выручке
   const hasRevenueInRange = () => {
+    if (!filters.from || !filters.to) {
+      return true; // Если нет фильтров, считаем что все заполнено
+    }
+    
     if (!Array.isArray(data) || data.length === 0) {
       return false;
     }
     
-    return data.some(record => {
+    // Создаем массив всех дней в диапазоне
+    const startDate = new Date(filters.from);
+    const endDate = new Date(filters.to);
+    const allDays = [];
+    
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+      allDays.push(date.toISOString().split('T')[0]);
+    }
+    
+    // Проверяем, есть ли данные по выручке для каждого дня
+    const daysWithRevenue = new Set();
+    data.forEach(record => {
       const revenue = Number(record?.revenue?.total) || 0;
-      return revenue > 0;
+      if (revenue > 0) {
+        daysWithRevenue.add(record.date);
+      }
     });
+    
+    // Проверяем, заполнены ли все дни
+    const allDaysFilled = allDays.every(day => daysWithRevenue.has(day));
+    
+    console.log('=== REVENUE RANGE CHECK ===');
+    console.log('Date range:', filters.from, 'to', filters.to);
+    console.log('All days in range:', allDays.length);
+    console.log('Days with revenue:', daysWithRevenue.size);
+    console.log('All days filled:', allDaysFilled);
+    console.log('===========================');
+    
+    return allDaysFilled;
   };
 
   const lastRevenueRecord = findLastRevenueRecord();
-  const showRevenueEmptyNotification = !hasRevenueInRange() && lastRevenueRecord;
+  const hasRevenue = hasRevenueInRange();
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationDismissed, setNotificationDismissed] = useState(false);
+
+  // Показываем уведомление если нет данных в диапазоне и есть последняя запись
+  useEffect(() => {
+    console.log('=== NOTIFICATION DEBUG ===');
+    console.log('hasRevenue:', hasRevenue);
+    console.log('lastRevenueRecord:', lastRevenueRecord);
+    console.log('notificationDismissed:', notificationDismissed);
+    console.log('showNotification:', showNotification);
+    
+    if (!hasRevenue && lastRevenueRecord && !notificationDismissed) {
+      console.log('Setting showNotification to true');
+      setShowNotification(true);
+    }
+    // Не скрываем уведомление автоматически - только при закрытии пользователем
+  }, [hasRevenue, lastRevenueRecord, notificationDismissed]);
+
+  // Сбрасываем флаг закрытия при изменении фильтров
+  useEffect(() => {
+    setNotificationDismissed(false);
+    setShowNotification(false); // Также сбрасываем показ уведомления
+  }, [filters.from, filters.to]);
 
   if (error) {
     return (
@@ -982,37 +1034,15 @@ const Index = () => {
           </span>
         </div>
 
-        {/* Уведомление о отсутствии данных по выручке */}
-        {showRevenueEmptyNotification && (
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                  <span className="text-amber-600 text-sm">⚠️</span>
-                </div>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-medium text-amber-800 mb-1">
-                  Нет данных по выручке в выбранном периоде
-                </h3>
-                <p className="text-sm text-amber-700">
-                  В выбранном диапазоне дат ({formatSelectedPeriod()}) отсутствуют данные по выручке.
-                </p>
-                {lastRevenueRecord && (
-                  <p className="text-sm text-amber-700 mt-1">
-                    Последние данные по выручке: <strong>{new Date(lastRevenueRecord.date).toLocaleDateString('ru-RU')}</strong> 
-                    ({lastRevenueRecord.unit === 'hotel' ? 'Отель' : 
-                      lastRevenueRecord.unit === 'restaurant' ? 'Ресторан' : 
-                      lastRevenueRecord.unit === 'spa' ? 'Спа-центр' : 
-                      lastRevenueRecord.unit === 'pool' ? 'Бассейн' : 
-                      lastRevenueRecord.unit === 'bar' ? 'Бар' : lastRevenueRecord.unit}) - 
-                    <strong>{lastRevenueRecord.revenue.toLocaleString()} ₽</strong>
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Кнопка для тестирования уведомления */}
+        <div className="mb-4">
+          <button 
+            onClick={() => setFilters({ from: '2020-01-01', to: '2020-01-31', unit: 'all' })}
+            className="px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
+          >
+            Тест: Показать уведомление (Январь 2020)
+          </button>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
@@ -1559,6 +1589,37 @@ const Index = () => {
             >
               <ArrowUp className="h-6 w-6" />
             </button>
+          </div>
+        )}
+
+        {/* Попап уведомление о последней записи по выручке */}
+        {showNotification && lastRevenueRecord && (
+          <div className="notification-popup">
+            <div className="notification-popup-content">
+              <div className="flex-1">
+                <p className="text-sm text-gray-800 font-medium">
+                  Последняя запись по выручке:
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  {new Date(lastRevenueRecord.date).toLocaleDateString('ru-RU')} 
+                  ({lastRevenueRecord.unit === 'hotel' ? 'Отель' : 
+                    lastRevenueRecord.unit === 'restaurant' ? 'Ресторан' : 
+                    lastRevenueRecord.unit === 'spa' ? 'Спа-центр' : 
+                    lastRevenueRecord.unit === 'pool' ? 'Бассейн' : 
+                    lastRevenueRecord.unit === 'bar' ? 'Бар' : lastRevenueRecord.unit})
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setNotificationDismissed(true);
+                  setShowNotification(false);
+                }}
+                className="notification-close-button"
+                aria-label="Закрыть уведомление"
+              >
+                <X className="h-4 w-4 text-gray-500" />
+              </button>
+            </div>
           </div>
         )}
     </div>
