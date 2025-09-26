@@ -480,13 +480,16 @@ All colors MUST be HSL.
             transform-origin: center !important;
           }
 
-          /* Custom switch styles */
+          /* Custom switch styles - FORCE immediate update */
           #profit-breakfast-switch[data-state="checked"],
           #revenue-breakfast-switch[data-state="checked"],
           #profit-breakfast-switch-mobile[data-state="checked"],
           #revenue-breakfast-switch-mobile[data-state="checked"] {
             background-color: #16a34a !important;
+            background: #16a34a !important;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            transition: background-color 0.1s ease !important;
+            -webkit-transition: background-color 0.1s ease !important;
           }
 
           #profit-breakfast-switch[data-state="unchecked"],
@@ -494,7 +497,25 @@ All colors MUST be HSL.
           #profit-breakfast-switch-mobile[data-state="unchecked"],
           #revenue-breakfast-switch-mobile[data-state="unchecked"] {
             background-color: #e5e7eb !important;
+            background: #e5e7eb !important;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+            transition: background-color 0.1s ease !important;
+            -webkit-transition: background-color 0.1s ease !important;
+          }
+
+          /* Force immediate style update on mobile */
+          @media (max-width: 768px) {
+            #profit-breakfast-switch,
+            #revenue-breakfast-switch,
+            #profit-breakfast-switch-mobile,
+            #revenue-breakfast-switch-mobile {
+              -webkit-transform: translateZ(0) !important;
+              transform: translateZ(0) !important;
+              -webkit-backface-visibility: hidden !important;
+              backface-visibility: hidden !important;
+              -webkit-perspective: 1000 !important;
+              perspective: 1000 !important;
+            }
           }
 
           /* White thumb for all switches - keep shadow but remove yellow */
