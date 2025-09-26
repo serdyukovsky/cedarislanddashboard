@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Switch } from "@/components/ui/switch";
 import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X, ArrowUp } from "lucide-react";
 import { Filters } from "@/components/Filters";
 import { useFinanceData } from "@/hooks/useFinanceData";
@@ -38,12 +37,6 @@ const Index = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [includeBreakfast, setIncludeBreakfast] = useState(true);
-  const [forceUpdate, setForceUpdate] = useState(0);
-
-  const handleBreakfastToggle = (checked: boolean) => {
-    setIncludeBreakfast(checked);
-    setForceUpdate(prev => prev + 1);
-  };
   const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
   
   // Закрытие мобильного меню при клике вне его
@@ -631,16 +624,38 @@ const Index = () => {
             <div className="flex items-center gap-4">
               <h2 className="text-3xl font-black text-foreground tracking-tight font-angry">Операционная прибыль 💰</h2>
               <div className="hidden sm:flex items-center gap-2">
-                <Switch
-                  key={`profit-${forceUpdate}`}
-                  checked={includeBreakfast}
-                  onCheckedChange={handleBreakfastToggle}
-                  id="profit-breakfast-switch"
-                  className="shadow-lg"
+                <button
+                  key={`profit-switch-${includeBreakfast}`}
+                  onClick={() => setIncludeBreakfast(!includeBreakfast)}
                   style={{
-                    backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
-                  }}
-                />
+                    position: 'relative',
+                    display: 'inline-flex',
+                    height: '24px',
+                    width: '44px',
+                    alignItems: 'center',
+                    borderRadius: '9999px',
+                    backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                    transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    border: 'none',
+                    cursor: 'pointer'
+                  } as React.CSSProperties}
+                  className={includeBreakfast ? 'bg-green-600' : 'bg-gray-300'}
+                >
+                  <span
+                    className="switch-thumb"
+                    style={{
+                      display: 'inline-block',
+                      height: '20px',
+                      width: '20px',
+                      borderRadius: '50%',
+                      backgroundColor: 'white',
+                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                      transform: includeBreakfast ? 'translateX(20px)' : 'translateX(0px)',
+                      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  />
+                </button>
                 <label htmlFor="profit-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
                   Включать завтраки
                 </label>
@@ -659,16 +674,36 @@ const Index = () => {
           
           {/* Мобильная версия переключателя */}
           <div className="sm:hidden flex items-center gap-2 mb-6">
-            <Switch
-              key={`profit-mobile-${forceUpdate}`}
-              checked={includeBreakfast}
-              onCheckedChange={handleBreakfastToggle}
-              id="profit-breakfast-switch-mobile"
-              className="shadow-lg"
+            <button
+              key={`profit-mobile-switch-${includeBreakfast}`}
+              onClick={() => setIncludeBreakfast(!includeBreakfast)}
               style={{
-                backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+                position: 'relative',
+                display: 'inline-flex',
+                height: '24px',
+                width: '44px',
+                alignItems: 'center',
+                borderRadius: '9999px',
+                backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s ease',
+                border: 'none',
+                cursor: 'pointer'
               }}
-            />
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  height: '20px',
+                  width: '20px',
+                  borderRadius: '50%',
+                  backgroundColor: 'white',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                  transform: includeBreakfast ? 'translateX(20px)' : 'translateX(0px)',
+                  transition: 'transform 0.2s ease'
+                }}
+              />
+            </button>
             <label htmlFor="profit-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
               Включать завтраки
             </label>
@@ -802,16 +837,38 @@ const Index = () => {
                 </TooltipProvider>
               )}
               <div className="hidden sm:flex items-center gap-2">
-                <Switch
-                  key={`revenue-${forceUpdate}`}
-                  checked={includeBreakfast}
-                  onCheckedChange={handleBreakfastToggle}
-                  id="revenue-breakfast-switch"
-                  className="shadow-lg"
+                <button
+                  key={`profit-switch-${includeBreakfast}`}
+                  onClick={() => setIncludeBreakfast(!includeBreakfast)}
                   style={{
-                    backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
-                  }}
-                />
+                    position: 'relative',
+                    display: 'inline-flex',
+                    height: '24px',
+                    width: '44px',
+                    alignItems: 'center',
+                    borderRadius: '9999px',
+                    backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                    transition: 'background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    border: 'none',
+                    cursor: 'pointer'
+                  } as React.CSSProperties}
+                  className={includeBreakfast ? 'bg-green-600' : 'bg-gray-300'}
+                >
+                  <span
+                    className="switch-thumb"
+                    style={{
+                      display: 'inline-block',
+                      height: '20px',
+                      width: '20px',
+                      borderRadius: '50%',
+                      backgroundColor: 'white',
+                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                      transform: includeBreakfast ? 'translateX(20px)' : 'translateX(0px)',
+                      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                  />
+                </button>
                 <label htmlFor="revenue-breakfast-switch" className="text-sm text-muted-foreground cursor-pointer">
                   Включать завтраки
                 </label>
@@ -820,16 +877,36 @@ const Index = () => {
           </div>
           {/* Мобильная версия переключателя */}
           <div className="sm:hidden flex items-center gap-2 mt-3">
-            <Switch
-              key={`revenue-mobile-${forceUpdate}`}
-              checked={includeBreakfast}
-              onCheckedChange={handleBreakfastToggle}
-              id="revenue-breakfast-switch-mobile"
-              className="shadow-lg"
+            <button
+              key={`profit-mobile-switch-${includeBreakfast}`}
+              onClick={() => setIncludeBreakfast(!includeBreakfast)}
               style={{
-                backgroundColor: includeBreakfast ? '#16a34a' : '#e5e7eb'
+                position: 'relative',
+                display: 'inline-flex',
+                height: '24px',
+                width: '44px',
+                alignItems: 'center',
+                borderRadius: '9999px',
+                backgroundColor: includeBreakfast ? '#16a34a' : '#d1d5db',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s ease',
+                border: 'none',
+                cursor: 'pointer'
               }}
-            />
+            >
+              <span
+                style={{
+                  display: 'inline-block',
+                  height: '20px',
+                  width: '20px',
+                  borderRadius: '50%',
+                  backgroundColor: 'white',
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                  transform: includeBreakfast ? 'translateX(20px)' : 'translateX(0px)',
+                  transition: 'transform 0.2s ease'
+                }}
+              />
+            </button>
             <label htmlFor="revenue-breakfast-switch-mobile" className="text-sm text-muted-foreground cursor-pointer">
               Включать завтраки
             </label>
