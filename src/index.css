@@ -497,11 +497,95 @@ All colors MUST be HSL.
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
           }
 
-          /* White thumb for all switches */
+          /* White thumb for all switches - AGGRESSIVE override */
           #profit-breakfast-switch [data-radix-switch-thumb],
           #revenue-breakfast-switch [data-radix-switch-thumb],
           #profit-breakfast-switch-mobile [data-radix-switch-thumb],
           #revenue-breakfast-switch-mobile [data-radix-switch-thumb] {
             background-color: white !important;
+            background: white !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+
+          /* Override any browser default colors for switches */
+          #profit-breakfast-switch,
+          #revenue-breakfast-switch,
+          #profit-breakfast-switch-mobile,
+          #revenue-breakfast-switch-mobile {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            border: none !important;
+            outline: none !important;
+          }
+
+          /* Override focus states that might show yellow */
+          #profit-breakfast-switch:focus,
+          #revenue-breakfast-switch:focus,
+          #profit-breakfast-switch-mobile:focus,
+          #revenue-breakfast-switch-mobile:focus,
+          #profit-breakfast-switch:focus-visible,
+          #revenue-breakfast-switch:focus-visible,
+          #profit-breakfast-switch-mobile:focus-visible,
+          #revenue-breakfast-switch-mobile:focus-visible {
+            outline: none !important;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3) !important;
+          }
+
+          /* Override any active/hover states */
+          #profit-breakfast-switch:active,
+          #revenue-breakfast-switch:active,
+          #profit-breakfast-switch-mobile:active,
+          #revenue-breakfast-switch-mobile:active,
+          #profit-breakfast-switch:hover,
+          #revenue-breakfast-switch:hover,
+          #profit-breakfast-switch-mobile:hover,
+          #revenue-breakfast-switch-mobile:hover {
+            background-color: inherit !important;
+            background: inherit !important;
+          }
+
+          /* GLOBAL YELLOW COLOR REMOVAL - AGGRESSIVE */
+          * {
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
+            -webkit-user-select: none !important;
+            -khtml-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+          }
+
+          /* Remove all yellow highlights and focus colors */
+          *:focus,
+          *:focus-visible,
+          *:active,
+          *:hover {
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          /* Override any browser default form colors */
+          input, select, textarea, button, [role="switch"], [role="checkbox"] {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-color: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+          }
+
+          /* Specific override for switch elements */
+          [data-radix-switch-root],
+          [data-radix-switch-thumb] {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-color: transparent !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
           }
 }
