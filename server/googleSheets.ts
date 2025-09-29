@@ -6,25 +6,38 @@ const SCOPES = [
 ];
 
 function getJwtClient() {
+	// Try GOOGLE_SERVICE_ACCOUNT_KEY first (JSON format)
 	const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-	if (!serviceAccountKey) {
-		throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_KEY");
+	if (serviceAccountKey) {
+		let credentials;
+		try {
+			credentials = JSON.parse(serviceAccountKey);
+		} catch (error) {
+			throw new Error("Invalid GOOGLE_SERVICE_ACCOUNT_KEY JSON format");
+		}
+		
+		if (!credentials.client_email || !credentials.private_key) {
+			throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY missing client_email or private_key");
+		}
+		
+		return new google.auth.JWT({
+			email: credentials.client_email,
+			key: credentials.private_key.replace(/\\n/g, "\n"),
+			scopes: SCOPES,
+		});
 	}
 	
-	let credentials;
-	try {
-		credentials = JSON.parse(serviceAccountKey);
-	} catch (error) {
-		throw new Error("Invalid GOOGLE_SERVICE_ACCOUNT_KEY JSON format");
-	}
+	// Fallback to separate environment variables
+	const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
+	const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
 	
-	if (!credentials.client_email || !credentials.private_key) {
-		throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY missing client_email or private_key");
+	if (!clientEmail || !privateKey) {
+		throw new Error("Missing GOOGLE_SERVICE_ACCOUNT_KEY or GOOGLE_SHEETS_CLIENT_EMAIL/GOOGLE_SHEETS_PRIVATE_KEY");
 	}
 	
 	return new google.auth.JWT({
-		email: credentials.client_email,
-		key: credentials.private_key.replace(/\\n/g, "\n"),
+		email: clientEmail,
+		key: privateKey.replace(/\\n/g, "\n"),
 		scopes: SCOPES,
 	});
 }

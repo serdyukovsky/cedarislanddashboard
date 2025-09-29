@@ -118,9 +118,16 @@ if (fs.existsSync(envLocalPath)) {
 const requiredEnvVars = [
 	'REVENUE_SHEET_ID',
 	'EXPENSE_SHEET_ID',
-	'BREAKFAST_SHEET_ID',
-	'GOOGLE_SERVICE_ACCOUNT_KEY'
+	'BREAKFAST_SHEET_ID'
 ];
+
+// Проверяем наличие Google credentials (либо JSON, либо отдельные переменные)
+const hasGoogleCredentials = process.env.GOOGLE_SERVICE_ACCOUNT_KEY || 
+	(process.env.GOOGLE_SHEETS_CLIENT_EMAIL && process.env.GOOGLE_SHEETS_PRIVATE_KEY);
+
+if (!hasGoogleCredentials) {
+	requiredEnvVars.push('GOOGLE_SERVICE_ACCOUNT_KEY or GOOGLE_SHEETS_CLIENT_EMAIL/GOOGLE_SHEETS_PRIVATE_KEY');
+}
 
 const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
 if (missingVars.length > 0) {
@@ -472,7 +479,7 @@ app.get("/api/finance", async (req, res) => {
 		console.log("Response data sample:", data.slice(0, 2));
 		
 		// Подсчитываем информацию о завтраках для ресторана
-		let breakfastInfo = null;
+		let breakfastInfo: { count: number; amount: number } | null = null;
 		if (includeBreakfast && breakfastData) {
 			// Подсчитываем общее количество завтраков и сумму
 			let totalBreakfastCount = 0;
