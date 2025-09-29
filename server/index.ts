@@ -5,6 +5,46 @@ import fs from "fs";
 import path from "path";
 import { readSheetValues, getSheetMetadata } from "./googleSheets.js";
 import { parseRevenueRows, normalizeDate, parseExpenseSheet, combineExpensesFromBothSheets, aggregateByDateUnit } from "./transform.js";
+import { parseISO, isValid, formatISO } from "date-fns";
+
+// Специальная функция для парсинга дат завтраков в формате DD.MM.YYYY
+function normalizeBreakfastDate(value: string): string {
+    const s = String(value).trim();
+    if (!s) throw new Error("Invalid date: empty string");
+
+    // Try ISO YYYY-MM-DD first
+    const iso = parseISO(s);
+    if (isValid(iso)) return formatISO(iso, { representation: "date" });
+
+    // Interpret as DD.MM.YYYY or DD/MM/YYYY (day first - Breakfast format)
+    let m = s.match(/^([0-3]?\d)[./-]([01]?\d)[./-](\d{4})$/);
+    if (m) {
+        const dd = Number(m[1]);
+        const mm = Number(m[2]);
+        const yyyy = Number(m[3]);
+        // Check if it's a valid date (day <= 31, month <= 12)
+        if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12) {
+            const d = new Date(Date.UTC(yyyy, mm - 1, dd));
+            if (isValid(d)) return formatISO(d, { representation: "date" });
+        }
+    }
+
+    // Interpret as DD.MM.YY or DD/MM/YY (day first - Breakfast format, assume 2000-2099)
+    m = s.match(/^([0-3]?\d)[./-]([01]?\d)[./-](\d{2})$/);
+    if (m) {
+        const dd = Number(m[1]);
+        const mm = Number(m[2]);
+        const yy = Number(m[3]);
+        const yyyy = 2000 + yy;
+        // Check if it's a valid date (day <= 31, month <= 12)
+        if (dd >= 1 && dd <= 31 && mm >= 1 && mm <= 12) {
+            const d = new Date(Date.UTC(yyyy, mm - 1, dd));
+            if (isValid(d)) return formatISO(d, { representation: "date" });
+        }
+    }
+
+    throw new Error(`Invalid breakfast date format: ${value}`);
+}
 
 // Кэш для данных
 interface CacheEntry {
@@ -12,6 +52,8 @@ interface CacheEntry {
 	lastModified: string;
 	revenueLastModified: string;
 	expenseLastModified: string;
+	breakfastLastModified: string;
+	breakfastInfo: { count: number; amount: number } | null;
 	timestamp: number;
 }
 
@@ -35,8 +77,8 @@ function incrementRequestCount(): void {
 	requestCount++;
 }
 
-function getCacheKey(unit: string, from?: string, to?: string): string {
-	return `${unit}-${from || 'all'}-${to || 'all'}`;
+function getCacheKey(unit: string, from?: string, to?: string, includeBreakfast?: boolean): string {
+	return `${unit}-${from || 'all'}-${to || 'all'}-${includeBreakfast ? 'breakfast' : 'nobreakfast'}`;
 }
 
 function getCachedData(key: string): CacheEntry | null {
@@ -52,12 +94,14 @@ function getCachedData(key: string): CacheEntry | null {
 	return entry;
 }
 
-function setCachedData(key: string, data: any[], lastModified: string, revenueLastModified: string, expenseLastModified: string): void {
+function setCachedData(key: string, data: any[], lastModified: string, revenueLastModified: string, expenseLastModified: string, breakfastLastModified: string, breakfastInfo: { count: number; amount: number } | null = null): void {
 	cache.set(key, {
 		data,
 		lastModified,
 		revenueLastModified,
 		expenseLastModified,
+		breakfastLastModified,
+		breakfastInfo,
 		timestamp: Date.now()
 	});
 }
@@ -74,6 +118,7 @@ if (fs.existsSync(envLocalPath)) {
 const requiredEnvVars = [
 	'REVENUE_SHEET_ID',
 	'EXPENSE_SHEET_ID',
+	'BREAKFAST_SHEET_ID',
 	'GOOGLE_SERVICE_ACCOUNT_KEY'
 ];
 
@@ -103,9 +148,10 @@ app.get("/api/finance", async (req, res) => {
 		const unit = (req.query.unit as string) || "all";
 		const from = (req.query.from as string) || undefined;
 		const to = (req.query.to as string) || undefined;
+		const includeBreakfast = req.query.includeBreakfast === 'true';
 
 		// Проверяем кэш (пропускаем если есть параметр refresh)
-		const cacheKey = getCacheKey(unit, from, to);
+		const cacheKey = getCacheKey(unit, from, to, includeBreakfast);
 		const cachedData = req.query.refresh ? null : getCachedData(cacheKey);
 		if (cachedData) {
 			console.log("Returning cached data for key:", cacheKey);
@@ -113,7 +159,9 @@ app.get("/api/finance", async (req, res) => {
 				data: cachedData.data,
 				lastModified: cachedData.lastModified,
 				revenueLastModified: cachedData.revenueLastModified,
-				expenseLastModified: cachedData.expenseLastModified
+				expenseLastModified: cachedData.expenseLastModified,
+				breakfastLastModified: cachedData.breakfastLastModified,
+				breakfastInfo: cachedData.breakfastInfo
 			});
 			return;
 		}
@@ -128,7 +176,9 @@ app.get("/api/finance", async (req, res) => {
 					data: fallbackCache.data,
 					lastModified: fallbackCache.lastModified,
 					revenueLastModified: fallbackCache.revenueLastModified,
-					expenseLastModified: fallbackCache.expenseLastModified
+					expenseLastModified: fallbackCache.expenseLastModified,
+					breakfastLastModified: fallbackCache.breakfastLastModified,
+					breakfastInfo: fallbackCache.breakfastInfo
 				});
 				return;
 			}
@@ -142,11 +192,15 @@ app.get("/api/finance", async (req, res) => {
 
 		const revenueSheetId = process.env.REVENUE_SHEET_ID as string;
 		const expenseSheetId = process.env.EXPENSE_SHEET_ID as string;
+		const breakfastSheetId = process.env.BREAKFAST_SHEET_ID as string;
 		const revenueRange = process.env.REVENUE_RANGE || "A:E";
         const expenseRange = process.env.EXPENSE_RANGE || "A:Z";
+        const breakfastRange = process.env.BREAKFAST_RANGE || "A:B";
         console.log(`Using expense range: ${expenseRange}`);
+        console.log(`Using breakfast range: ${breakfastRange}`);
         const revenueSheetName = process.env.REVENUE_SHEET_NAME || "Выручка";
         const expenseSheetName = process.env.EXPENSE_SHEET_NAME || "Расходы";
+        const breakfastSheetName = process.env.BREAKFAST_SHEET_NAME || "Лист1";
     if (!revenueSheetId && !expenseSheetId) {
 			return res.status(500).json({ error: "Missing sheet IDs" });
 		}
@@ -303,9 +357,46 @@ app.get("/api/finance", async (req, res) => {
             console.error("Error stack:", e.stack);
         }
     }
+
+    // Читаем данные о завтраках
+    let breakfastData: { [date: string]: number } = {};
+    if (breakfastSheetId) {
+        try {
+            console.log("Reading breakfast data...");
+            const breakfastRows = await readSheetValues(breakfastSheetId, `${breakfastSheetName}!${breakfastRange}`);
+            console.log(`Breakfast data raw: ${breakfastRows.length} rows`);
+            
+               // Парсим данные о завтраках: столбец A - даты, столбец B - количество человек
+               for (const row of breakfastRows) {
+                   const dateStr = row[0];
+                   const peopleCount = row[1];
+                   
+                   if (!dateStr || !peopleCount) continue;
+                   
+                   try {
+                       // Для завтраков используем формат DD.MM.YYYY
+                       const normalizedDate = normalizeBreakfastDate(dateStr);
+                       const count = Number(peopleCount);
+                       
+                       if (!isNaN(count) && count > 0) {
+                           breakfastData[normalizedDate] = count;
+                       }
+                   } catch (e) {
+                       console.log(`Failed to parse breakfast date: ${dateStr}`, e);
+                       // Пропускаем невалидные даты
+                       continue;
+                   }
+               }
+            
+            console.log(`Parsed ${Object.keys(breakfastData).length} breakfast records`);
+        } catch (e) {
+            console.error("Failed to read breakfast sheet:", e);
+            console.error("Error stack:", e.stack);
+        }
+    }
 		console.log("Aggregating data...");
-		// Используем полную функцию агрегации с учетом расходов
-		let data = aggregateByDateUnit(revenues, expenses);
+		// Используем полную функцию агрегации с учетом расходов и завтраков
+		let data = aggregateByDateUnit(revenues, expenses, breakfastData, includeBreakfast);
 		
 		// Логируем данные до фильтрации
 		console.log(`Data before filtering: ${data.length} records`);
@@ -348,6 +439,7 @@ app.get("/api/finance", async (req, res) => {
 		// Get sheet metadata for last modified time
 		let revenueLastModified: string | null = null;
 		let expenseLastModified: string | null = null;
+		let breakfastLastModified: string | null = null;
 		
 		try {
 			if (revenueSheetId) {
@@ -367,14 +459,55 @@ app.get("/api/finance", async (req, res) => {
 			console.warn("Failed to get expense sheet metadata:", e);
 		}
 
+		try {
+			if (breakfastSheetId) {
+				const metadata = await getSheetMetadata(breakfastSheetId);
+				breakfastLastModified = metadata.modifiedTime || null;
+			}
+		} catch (e) {
+			console.warn("Failed to get breakfast sheet metadata:", e);
+		}
+
 		console.log("Sending response with", data.length, "records");
 		console.log("Response data sample:", data.slice(0, 2));
 		
+		// Подсчитываем информацию о завтраках для ресторана
+		let breakfastInfo = null;
+		if (includeBreakfast && breakfastData) {
+			// Подсчитываем общее количество завтраков и сумму
+			let totalBreakfastCount = 0;
+			let totalBreakfastAmount = 0;
+			
+			// Фильтруем данные о завтраках по выбранному периоду
+			const filteredBreakfastData = Object.entries(breakfastData).filter(([date, count]) => {
+				if (from && date < from) return false;
+				if (to && date > to) return false;
+				return true;
+			});
+			
+			for (const [date, count] of filteredBreakfastData) {
+				totalBreakfastCount += count;
+				totalBreakfastAmount += count * 700; // 700 рублей за завтрак
+			}
+			
+			if (totalBreakfastCount > 0) {
+				breakfastInfo = {
+					count: totalBreakfastCount,
+					amount: totalBreakfastAmount
+				};
+				console.log(`Breakfast info: ${totalBreakfastCount} people, ${totalBreakfastAmount} rubles`);
+			} else {
+				console.log('No breakfast data for selected period');
+			}
+		}
+
 		const responseData = { 
 			data, 
 			lastModified: revenueLastModified,
 			revenueLastModified,
-			expenseLastModified
+			expenseLastModified,
+			breakfastLastModified,
+			breakfastInfo
 		};
 		
 		// Проверяем, что JSON валиден
@@ -393,7 +526,7 @@ app.get("/api/finance", async (req, res) => {
 		}
 		
 		// Сохраняем в кэш
-		setCachedData(cacheKey, data, revenueLastModified || "", revenueLastModified || "", expenseLastModified || "");
+		setCachedData(cacheKey, data, revenueLastModified || "", revenueLastModified || "", expenseLastModified || "", breakfastLastModified || "", breakfastInfo);
 		console.log("Data cached for key:", cacheKey);
 		
 		res.json(responseData);
@@ -405,7 +538,7 @@ app.get("/api/finance", async (req, res) => {
 		// Обработка ошибки квоты Google Sheets API
 		if (e?.message?.includes("Quota exceeded")) {
 			console.log("Google Sheets API quota exceeded, trying to return cached data");
-			const cacheKey = getCacheKey(req.query.unit as string || "all", req.query.from as string, req.query.to as string);
+			const cacheKey = getCacheKey(req.query.unit as string || "all", req.query.from as string, req.query.to as string, req.query.includeBreakfast === 'true');
 			const cachedData = getCachedData(cacheKey);
 			if (cachedData) {
 				console.log("Returning cached data due to quota exceeded");
@@ -413,7 +546,9 @@ app.get("/api/finance", async (req, res) => {
 					data: cachedData.data,
 					lastModified: cachedData.lastModified,
 					revenueLastModified: cachedData.revenueLastModified,
-					expenseLastModified: cachedData.expenseLastModified
+					expenseLastModified: cachedData.expenseLastModified,
+					breakfastLastModified: cachedData.breakfastLastModified,
+					breakfastInfo: cachedData.breakfastInfo
 				});
 				return;
 			}

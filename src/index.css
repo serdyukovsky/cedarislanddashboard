@@ -588,6 +588,28 @@ All colors MUST be HSL.
           * {
             -webkit-tap-highlight-color: transparent !important;
             -webkit-touch-callout: none !important;
+          }
+
+          /* Allow text selection for content areas */
+          p, span, div, h1, h2, h3, h4, h5, h6, td, th, li, a, label {
+            -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+          }
+
+          /* Allow text selection in data cards and financial information */
+          .card, .card-content, [class*="text-"], [class*="font-"], .recharts-text {
+            -webkit-user-select: text !important;
+            -khtml-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+          }
+
+          /* Keep buttons and interactive elements non-selectable */
+          button, input, select, textarea, [role="button"], [role="tab"], [role="menuitem"] {
             -webkit-user-select: none !important;
             -khtml-user-select: none !important;
             -moz-user-select: none !important;

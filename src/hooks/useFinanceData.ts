@@ -10,6 +10,7 @@ export interface FinanceFilters {
 	unit: "all" | BusinessUnit;
 	from?: string;
 	to?: string;
+	includeBreakfast?: boolean;
 }
 
 export function useFinanceData(filters: FinanceFilters) {
@@ -17,6 +18,7 @@ export function useFinanceData(filters: FinanceFilters) {
 	const [lastModified, setLastModified] = useState<string | null>(null);
 	const [revenueLastModified, setRevenueLastModified] = useState<string | null>(null);
 	const [expenseLastModified, setExpenseLastModified] = useState<string | null>(null);
+	const [breakfastInfo, setBreakfastInfo] = useState<{ count: number; amount: number } | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -25,8 +27,9 @@ export function useFinanceData(filters: FinanceFilters) {
 		if (filters.unit) params.set("unit", filters.unit);
 		if (filters.from) params.set("from", filters.from);
 		if (filters.to) params.set("to", filters.to);
+		if (filters.includeBreakfast !== undefined) params.set("includeBreakfast", filters.includeBreakfast.toString());
 		return params.toString();
-	}, [filters.unit, filters.from, filters.to]);
+	}, [filters.unit, filters.from, filters.to, filters.includeBreakfast]);
 
 	useEffect(() => {
 		let ignore = false;
@@ -71,6 +74,7 @@ export function useFinanceData(filters: FinanceFilters) {
 					setLastModified(json.lastModified);
 					setRevenueLastModified(json.revenueLastModified);
 					setExpenseLastModified(json.expenseLastModified);
+					setBreakfastInfo(json.breakfastInfo || null);
 				}
 			} catch (e: any) {
 				console.error("Error in useFinanceData:", e);
@@ -85,5 +89,5 @@ export function useFinanceData(filters: FinanceFilters) {
 		};
 	}, [qs]);
 
-	return { data, lastModified, revenueLastModified, expenseLastModified, loading, error };
+	return { data, lastModified, revenueLastModified, expenseLastModified, breakfastInfo, loading, error };
 }

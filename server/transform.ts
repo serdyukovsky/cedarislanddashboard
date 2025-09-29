@@ -548,7 +548,7 @@ export function combineExpensesFromBothSheets(cashExpenses: ExpenseRecord[], acc
 }
 
 // Функция агрегации данных с учетом расходов
-export function aggregateByDateUnit(revenues: RevenueRow[], expenses: DetailedExpenseRow[]): any[] {
+export function aggregateByDateUnit(revenues: RevenueRow[], expenses: DetailedExpenseRow[], breakfastData?: { [date: string]: number }, includeBreakfast: boolean = true): any[] {
 	console.log(`Aggregating ${revenues.length} revenue records and ${expenses.length} expense records`);
 	
 	const key = (d: string, u: string) => `${d}__${u}`;
@@ -607,6 +607,69 @@ export function aggregateByDateUnit(revenues: RevenueRow[], expenses: DetailedEx
 		// Сохраняем детализацию расходов
 		if (e.expenseDetails) {
 			item.expenseDetails = e.expenseDetails;
+		}
+	}
+
+	// Обработка данных о завтраках
+	if (breakfastData && includeBreakfast) {
+		console.log(`Processing breakfast data for ${Object.keys(breakfastData).length} dates`);
+		const BREAKFAST_PRICE = 700; // Стоимость одного завтрака
+		
+		for (const [date, peopleCount] of Object.entries(breakfastData)) {
+			const hotelKey = key(date, 'hotel');
+			const restaurantKey = key(date, 'restaurant');
+			
+			const breakfastAmount = peopleCount * BREAKFAST_PRICE;
+			
+			// Добавляем к выручке ресторана
+			if (map.has(restaurantKey)) {
+				const restaurantItem = map.get(restaurantKey)!;
+				restaurantItem.revenue.cash += breakfastAmount;
+				restaurantItem.revenue.total += breakfastAmount;
+				if (restaurantItem.revenue.breakdown) {
+					restaurantItem.revenue.breakdown.cash += breakfastAmount;
+				}
+			} else {
+				// Создаем запись для ресторана, если её нет
+				map.set(restaurantKey, {
+					date: date,
+					unit: 'restaurant',
+					revenue: { 
+						cash: breakfastAmount, 
+						bank: 0, 
+						acquiring: 0, 
+						total: breakfastAmount,
+						breakdown: { bankLegal: 0, bankIndividual: 0, online: 0, acquiringTerminal: 0, cash: breakfastAmount }
+					},
+					expense: { purchases: 0, salaries: 0, other: 0, total: 0 },
+					profit: breakfastAmount,
+				});
+			}
+			
+			// Вычитаем из выручки отеля
+			if (map.has(hotelKey)) {
+				const hotelItem = map.get(hotelKey)!;
+				hotelItem.revenue.cash -= breakfastAmount;
+				hotelItem.revenue.total -= breakfastAmount;
+				if (hotelItem.revenue.breakdown) {
+					hotelItem.revenue.breakdown.cash -= breakfastAmount;
+				}
+			} else {
+				// Создаем запись для отеля, если её нет (с отрицательной выручкой)
+				map.set(hotelKey, {
+					date: date,
+					unit: 'hotel',
+					revenue: { 
+						cash: -breakfastAmount, 
+						bank: 0, 
+						acquiring: 0, 
+						total: -breakfastAmount,
+						breakdown: { bankLegal: 0, bankIndividual: 0, online: 0, acquiringTerminal: 0, cash: -breakfastAmount }
+					},
+					expense: { purchases: 0, salaries: 0, other: 0, total: 0 },
+					profit: -breakfastAmount,
+				});
+			}
 		}
 	}
 

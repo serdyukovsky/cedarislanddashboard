@@ -37,7 +37,8 @@ const Index = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [includeBreakfast, setIncludeBreakfast] = useState(true);
-  const { data, lastModified, revenueLastModified, expenseLastModified, loading, error } = useFinanceData(filters);
+  const { data, lastModified, revenueLastModified, expenseLastModified, breakfastInfo, loading, error } = useFinanceData({ ...filters, includeBreakfast });
+  
   
   // Закрытие мобильного меню при клике вне его
   useEffect(() => {
@@ -1034,15 +1035,6 @@ const Index = () => {
           </span>
         </div>
 
-        {/* Кнопка для тестирования уведомления */}
-        <div className="mb-4">
-          <button 
-            onClick={() => setFilters({ from: '2020-01-01', to: '2020-01-31', unit: 'all' })}
-            className="px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
-          >
-            Тест: Показать уведомление (Январь 2020)
-          </button>
-        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
@@ -1092,6 +1084,11 @@ const Index = () => {
                 className="text-2xl font-bold text-foreground"
                 suffix=" ₽"
               />
+              {includeBreakfast && breakfastInfo && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Включая завтраки: {breakfastInfo.count} чел. ({breakfastInfo.amount.toLocaleString('ru-RU')} ₽)
+                </div>
+              )}
             </CardContent>
           </Card>
 
