@@ -163,8 +163,8 @@ const Summary = () => {
       setLoading(true);
       try {
         const [res1, res2] = await Promise.all([
-          fetch(`http://localhost:4000/api/finance?unit=all&from=${period1From}&to=${period1To}&includeBreakfast=true`),
-          fetch(`http://localhost:4000/api/finance?unit=all&from=${period2From}&to=${period2To}&includeBreakfast=true`)
+          fetch(`/api/finance?unit=all&from=${period1From}&to=${period1To}&includeBreakfast=true`),
+          fetch(`/api/finance?unit=all&from=${period2From}&to=${period2To}&includeBreakfast=true`)
         ]);
         
         if (!res1.ok || !res2.ok) {

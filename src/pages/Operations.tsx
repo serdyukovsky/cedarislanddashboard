@@ -135,7 +135,7 @@ export default function Operations() {
         if (type !== 'all') params.append('type', type);
         if (category) params.append('category', category);
         
-        const response = await fetch(`http://localhost:4000/api/transactions?${params.toString()}`);
+        const response = await fetch(`/api/transactions?${params.toString()}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch transactions');
