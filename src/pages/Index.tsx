@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TrendingUp, Building2, UtensilsCrossed, Waves, BarChart3, ExternalLink, FileSpreadsheet, ChevronDown, ChevronUp, Droplets, Wine, Loader2, DollarSign, User, Zap, Menu, X, ArrowUp } from "lucide-react";
@@ -8,7 +9,6 @@ import { DailyLines } from "@/components/charts/DailyLines";
 import { UnitsBars } from "@/components/charts/UnitsBars";
 import { RevenuePie, ExpensePie } from "@/components/charts/Pies";
 import { ExpenseCategoriesPie } from "@/components/charts/ExpenseCategoriesPie";
-import { FinanceTable } from "@/components/FinanceTable";
 import { RevenueBreakdown } from "@/components/RevenueBreakdown";
 import { ExpenseBreakdown } from "@/components/ExpenseBreakdown";
 import { ExpenseCategories } from "@/components/ExpenseCategories";
@@ -16,6 +16,21 @@ import { AnimatedNumber } from "@/components/AnimatedNumber";
 import { ProfitQuotes } from "@/components/ProfitQuotes";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
+  // Функция для навигации на страницу операций
+  const navigateToOperations = (params: { unit?: string; type?: string; category?: string }) => {
+    const searchParams = new URLSearchParams();
+    if (params.unit && params.unit !== 'all') searchParams.append('unit', params.unit);
+    if (params.type) searchParams.append('type', params.type);
+    if (params.category) searchParams.append('category', params.category);
+    if (filters.from) searchParams.append('from', filters.from);
+    if (filters.to) searchParams.append('to', filters.to);
+    
+    console.log('🔔 Navigating to operations:', params);
+    navigate(`/operations?${searchParams.toString()}`);
+  };
+  
   // Устанавливаем текущий месяц по умолчанию
   const getCurrentMonthRange = () => {
     const now = new Date();
@@ -675,10 +690,10 @@ const Index = () => {
           <nav className="flex items-center gap-8 ml-auto">
             {/* Десктопное меню */}
             <div className="hidden sm:flex items-center gap-8">
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/summary" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Сводно
               </a>
-              <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/operations" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Операции
               </a>
               <a href="/about" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
@@ -806,7 +821,12 @@ const Index = () => {
         {/* Блок операционной прибыли */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Общая прибыль - выделенная карточка */}
-          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl col-span-1 md:col-span-2 lg:col-span-2" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
+          <Card 
+            className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl col-span-1 md:col-span-2 lg:col-span-2 cursor-pointer hover:scale-105 transition-transform" 
+            style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}
+            onClick={() => navigateToOperations({ unit: 'all' })}
+            title="Кликните чтобы посмотреть все операции"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общая прибыль</CardTitle>
               {loading ? (
@@ -825,7 +845,11 @@ const Index = () => {
               {!loading && <p className="text-sm text-gray-400 mt-2">{formatSelectedPeriod()}</p>}
             </CardContent>
           </Card>
-          <Card className={`shadow-card border-l-4 border-l-hotel ${(totals.hotel - totals.hotelExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
+          <Card 
+            className={`shadow-card border-l-4 border-l-hotel cursor-pointer hover:scale-105 transition-transform ${(totals.hotel - totals.hotelExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}
+            onClick={() => navigateToOperations({ unit: 'hotel' })}
+            title="Кликните чтобы посмотреть операции Отель и бани"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Отель и бани</CardTitle>
               <Building2 className="h-4 w-4 text-hotel" />
@@ -839,7 +863,11 @@ const Index = () => {
               />
             </CardContent>
           </Card>
-          <Card className={`shadow-card border-l-4 border-l-restaurant ${(totals.restaurant - totals.restaurantExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
+          <Card 
+            className={`shadow-card border-l-4 border-l-restaurant cursor-pointer hover:scale-105 transition-transform ${(totals.restaurant - totals.restaurantExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}
+            onClick={() => navigateToOperations({ unit: 'restaurant' })}
+            title="Кликните чтобы посмотреть операции Ресторан"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Ресторан</CardTitle>
               <UtensilsCrossed className="h-4 w-4 text-restaurant" />
@@ -853,7 +881,11 @@ const Index = () => {
               />
             </CardContent>
           </Card>
-          <Card className={`shadow-card border-l-4 border-l-spa ${(totals.spa - totals.spaExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
+          <Card 
+            className={`shadow-card border-l-4 border-l-spa cursor-pointer hover:scale-105 transition-transform ${(totals.spa - totals.spaExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}
+            onClick={() => navigateToOperations({ unit: 'spa' })}
+            title="Кликните чтобы посмотреть операции Спа-центр"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Спа-центр</CardTitle>
               <Waves className="h-4 w-4 text-spa" />
@@ -868,7 +900,11 @@ const Index = () => {
             </CardContent>
           </Card>
           {hasPoolData && (
-            <Card className={`shadow-card border-l-4 border-l-blue-500 ${(totals.pool - totals.poolExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
+            <Card 
+              className={`shadow-card border-l-4 border-l-blue-500 cursor-pointer hover:scale-105 transition-transform ${(totals.pool - totals.poolExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}
+              onClick={() => navigateToOperations({ unit: 'pool' })}
+              title="Кликните чтобы посмотреть операции Бассейн"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бассейн</CardTitle>
                 <Droplets className="h-4 w-4 text-blue-500" />
@@ -884,7 +920,11 @@ const Index = () => {
             </Card>
           )}
           {hasBarData && (
-            <Card className={`shadow-card border-l-4 border-l-amber-500 ${(totals.bar - totals.barExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}>
+            <Card 
+              className={`shadow-card border-l-4 border-l-amber-500 cursor-pointer hover:scale-105 transition-transform ${(totals.bar - totals.barExpense) < 0 ? 'bg-gradient-to-br from-destructive/5 to-destructive/10 border-destructive/20' : ''}`}
+              onClick={() => navigateToOperations({ unit: 'bar' })}
+              title="Кликните чтобы посмотреть операции Бар"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бар</CardTitle>
                 <Wine className="h-4 w-4 text-amber-500" />
@@ -1037,7 +1077,12 @@ const Index = () => {
 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
+          <Card 
+            className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl cursor-pointer hover:scale-105 transition-transform" 
+            style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}
+            onClick={() => navigateToOperations({ type: 'revenue' })}
+            title="Кликните чтобы посмотреть все доходы"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общая выручка</CardTitle>
               {loading ? (
@@ -1057,7 +1102,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-hotel">
+          <Card 
+            className="shadow-card border-l-4 border-l-hotel cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'hotel', type: 'revenue' })}
+            title="Кликните чтобы посмотреть доходы Отель и бани"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Отель и бани</CardTitle>
               <Building2 className="h-4 w-4 text-hotel" />
@@ -1072,7 +1121,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-restaurant">
+          <Card 
+            className="shadow-card border-l-4 border-l-restaurant cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'restaurant', type: 'revenue' })}
+            title="Кликните чтобы посмотреть доходы Ресторан"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Ресторан</CardTitle>
               <UtensilsCrossed className="h-4 w-4 text-restaurant" />
@@ -1092,7 +1145,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-spa">
+          <Card 
+            className="shadow-card border-l-4 border-l-spa cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'spa', type: 'revenue' })}
+            title="Кликните чтобы посмотреть доходы Спа-центр"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Спа-центр</CardTitle>
               <Waves className="h-4 w-4 text-spa" />
@@ -1108,7 +1165,11 @@ const Index = () => {
           </Card>
 
           {hasPoolData && (
-            <Card className="shadow-card border-l-4 border-l-blue-500">
+            <Card 
+              className="shadow-card border-l-4 border-l-blue-500 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigateToOperations({ unit: 'pool', type: 'revenue' })}
+              title="Кликните чтобы посмотреть доходы Бассейн"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бассейн</CardTitle>
                 <Droplets className="h-4 w-4 text-blue-500" />
@@ -1125,7 +1186,11 @@ const Index = () => {
           )}
 
           {hasBarData && (
-            <Card className="shadow-card border-l-4 border-l-amber-500">
+            <Card 
+              className="shadow-card border-l-4 border-l-amber-500 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigateToOperations({ unit: 'bar', type: 'revenue' })}
+              title="Кликните чтобы посмотреть доходы Бар"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бар</CardTitle>
                 <Wine className="h-4 w-4 text-amber-500" />
@@ -1142,7 +1207,7 @@ const Index = () => {
           )}
         </div>
 
-        <RevenueBreakdown data={data} />
+        <RevenueBreakdown data={data} from={filters.from} to={filters.to} />
 
         {/* Заголовок блока расходов */}
         <div className="mt-8 mb-4">
@@ -1179,7 +1244,12 @@ const Index = () => {
 
         {/* Блок расходов */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl" style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}>
+          <Card 
+            className="shadow-card bg-gray-900 border-gray-700 shadow-lg sm:shadow-2xl cursor-pointer hover:scale-105 transition-transform" 
+            style={{boxShadow: '0 10px 25px -3px rgba(0, 0, 0, 0.4)'}}
+            onClick={() => navigateToOperations({ type: 'expense' })}
+            title="Кликните чтобы посмотреть все расходы"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-gray-300">Общие расходы</CardTitle>
               {loading ? (
@@ -1233,7 +1303,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-hotel">
+          <Card 
+            className="shadow-card border-l-4 border-l-hotel cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'hotel', type: 'expense' })}
+            title="Кликните чтобы посмотреть расходы Отель и бани"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Отель и бани</CardTitle>
               <Building2 className="h-4 w-4 text-hotel" />
@@ -1278,7 +1352,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-restaurant">
+          <Card 
+            className="shadow-card border-l-4 border-l-restaurant cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'restaurant', type: 'expense' })}
+            title="Кликните чтобы посмотреть расходы Ресторан"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Ресторан</CardTitle>
               <UtensilsCrossed className="h-4 w-4 text-restaurant" />
@@ -1323,7 +1401,11 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          <Card className="shadow-card border-l-4 border-l-spa">
+          <Card 
+            className="shadow-card border-l-4 border-l-spa cursor-pointer hover:scale-105 transition-transform"
+            onClick={() => navigateToOperations({ unit: 'spa', type: 'expense' })}
+            title="Кликните чтобы посмотреть расходы Спа-центр"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">Спа-центр</CardTitle>
               <Waves className="h-4 w-4 text-spa" />
@@ -1369,7 +1451,11 @@ const Index = () => {
           </Card>
 
           {hasPoolExpenseData && (
-            <Card className="shadow-card border-l-4 border-l-blue-500">
+            <Card 
+              className="shadow-card border-l-4 border-l-blue-500 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigateToOperations({ unit: 'pool', type: 'expense' })}
+              title="Кликните чтобы посмотреть расходы Бассейн"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бассейн</CardTitle>
                 <Droplets className="h-4 w-4 text-blue-500" />
@@ -1416,7 +1502,11 @@ const Index = () => {
           )}
 
           {hasBarExpenseData && (
-            <Card className="shadow-card border-l-4 border-l-amber-500">
+            <Card 
+              className="shadow-card border-l-4 border-l-amber-500 cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => navigateToOperations({ unit: 'bar', type: 'expense' })}
+              title="Кликните чтобы посмотреть расходы Бар"
+            >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
                 <CardTitle className="text-sm font-medium text-muted-foreground">Бар</CardTitle>
                 <Wine className="h-4 w-4 text-amber-500" />
@@ -1464,7 +1554,7 @@ const Index = () => {
         </div>
 
         <div className="space-y-4">
-          <ExpenseBreakdown data={data} />
+          <ExpenseBreakdown data={data} from={filters.from} to={filters.to} />
 
         <div 
             className="flex items-center gap-2 cursor-pointer glassmorphism-hover p-2 rounded-xl"
@@ -1493,10 +1583,6 @@ const Index = () => {
         </div>
 
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Операции</h2>
-        <FinanceTable data={data} />
-        </div>
       </div>
 
       {/* Подвал */}
@@ -1540,14 +1626,14 @@ const Index = () => {
             }`}>
               <div className="py-2">
                 <a 
-                  href="#" 
+                  href="/" 
                   className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Сводно
                 </a>
                 <a 
-                  href="#" 
+                  href="/operations" 
                   className="block px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-colors duration-200"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

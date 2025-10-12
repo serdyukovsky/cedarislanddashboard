@@ -1,11 +1,26 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { AggregatedDailyUnit } from "@/server/types";
 
 export function FinanceTable({ data }: { data: AggregatedDailyUnit[] }) {
+	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const shouldShowToggle = data.length > 30;
 	const displayData = shouldShowToggle && !isExpanded ? data.slice(0, 30) : data;
+	
+	// Функция для навигации на страницу операций
+	const navigateToOperations = (unit: string, date: string, type: 'revenue' | 'expense') => {
+		console.log('🔔 Cell clicked!', { unit, date, type });
+		const params = new URLSearchParams({
+			unit,
+			from: date,
+			to: date,
+			type
+		});
+		console.log('📍 Navigating to:', `/operations?${params.toString()}`);
+		navigate(`/operations?${params.toString()}`);
+	};
 
 	return (
 		<div className="border rounded-lg overflow-hidden bg-card">
@@ -27,7 +42,7 @@ export function FinanceTable({ data }: { data: AggregatedDailyUnit[] }) {
 				</thead>
 				<tbody>
 					{displayData.map((r, idx) => (
-						<tr key={idx} className="border-t">
+						<tr key={idx} className="border-t hover:bg-gray-50">
 							<td className="p-2">{r.date}</td>
 							<td className="p-2">{
 								r.unit === "hotel" ? "Отель и бани" : 
@@ -36,14 +51,102 @@ export function FinanceTable({ data }: { data: AggregatedDailyUnit[] }) {
 								r.unit === "pool" ? "Бассейн" :
 								r.unit === "bar" ? "Бар" : r.unit
 							}</td>
-							<td className="p-2 text-right">{(Number(r.revenue?.cash) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right">{(Number(r.revenue?.bank) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right">{(Number(r.revenue?.acquiring) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right font-medium">{(Number(r.revenue?.total) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right">{(Number(r.expense?.purchases) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right">{(Number(r.expense?.salaries) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right">{(Number(r.expense?.other) || 0).toLocaleString("ru-RU")} ₽</td>
-							<td className="p-2 text-right font-medium">{(Number(r.expense?.total) || 0).toLocaleString("ru-RU")} ₽</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-blue-50 hover:text-blue-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'revenue');
+								}}
+								title="Кликните чтобы посмотреть детали доходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.revenue?.cash) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-blue-50 hover:text-blue-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'revenue');
+								}}
+								title="Кликните чтобы посмотреть детали доходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.revenue?.bank) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-blue-50 hover:text-blue-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'revenue');
+								}}
+								title="Кликните чтобы посмотреть детали доходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.revenue?.acquiring) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right font-medium hover:bg-blue-50 hover:text-blue-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'revenue');
+								}}
+								title="Кликните чтобы посмотреть детали доходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.revenue?.total) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-red-50 hover:text-red-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'expense');
+								}}
+								title="Кликните чтобы посмотреть детали расходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.expense?.purchases) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-red-50 hover:text-red-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'expense');
+								}}
+								title="Кликните чтобы посмотреть детали расходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.expense?.salaries) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right hover:bg-red-50 hover:text-red-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'expense');
+								}}
+								title="Кликните чтобы посмотреть детали расходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.expense?.other) || 0).toLocaleString("ru-RU")} ₽
+							</td>
+							<td 
+								className="clickable-cell p-2 text-right font-medium hover:bg-red-50 hover:text-red-700 transition-colors"
+								onClick={(e) => {
+									e.preventDefault();
+									e.stopPropagation();
+									navigateToOperations(r.unit, r.date, 'expense');
+								}}
+								title="Кликните чтобы посмотреть детали расходов"
+								style={{ cursor: 'pointer' }}
+							>
+								{(Number(r.expense?.total) || 0).toLocaleString("ru-RU")} ₽
+							</td>
 							<td className="p-2 text-right font-semibold">{(Number(r.profit) || 0).toLocaleString("ru-RU")} ₽</td>
 						</tr>
 					))}

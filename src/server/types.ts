@@ -38,4 +38,18 @@ export interface AggregatedDailyUnit {
 	};
 	expense: { purchases: number; salaries: number; other: number; total: number };
 	profit: number;
+	expenseDetails?: {
+		cash: number;
+		account: number;
+		total: number;
+		cashCount: number;
+		accountCount: number;
+		categories: string[];
+		categoryDetails?: {
+			category: string;
+			amount: number;
+			paymentMethod: 'cash' | 'account';
+			rowIndex: number;
+		}[];
+	};
 }

@@ -197,7 +197,37 @@ export function ExpensePie({ data }: { data: AggregatedDailyUnit[] }) {
 	// Обрабатываем данные для группировки по категориям
 	(Array.isArray(data) ? data : []).forEach(record => {
 		const expenseDetails = (record as any).expenseDetails;
-		if (expenseDetails && expenseDetails.categories && expenseDetails.total > 0) {
+		
+		// Используем categoryDetails для точного расчета по реальным суммам
+		if (expenseDetails && expenseDetails.categoryDetails && Array.isArray(expenseDetails.categoryDetails)) {
+			expenseDetails.categoryDetails.forEach((detail: any) => {
+				if (!detail.category || !detail.amount) return;
+				
+				const normalizedCategory = normalizeCategoryName(detail.category);
+				const amount = Number(detail.amount) || 0;
+				
+				// ФОТ категории
+				if (normalizedCategory.includes('фот') || 
+						normalizedCategory.includes('зп') || 
+						normalizedCategory.includes('специалист') ||
+						normalizedCategory.includes('трансфер') ||
+						normalizedCategory.includes('персонал')) {
+					categoryTotals.fot += amount;
+				}
+				// Закупки категории
+				else if (normalizedCategory.includes('продукт') || 
+								 normalizedCategory.includes('расходн') ||
+								 normalizedCategory.includes('материал')) {
+					categoryTotals.purchases += amount;
+				}
+				// Остальное
+				else {
+					categoryTotals.other += amount;
+				}
+			});
+		}
+		// Fallback: если нет categoryDetails, используем старый метод с categories
+		else if (expenseDetails && expenseDetails.categories && expenseDetails.total > 0) {
 			const totalAmount = expenseDetails.total;
 			const categories = expenseDetails.categories;
 			

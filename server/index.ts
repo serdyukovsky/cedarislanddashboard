@@ -578,6 +578,204 @@ app.get("/api/finance", async (req, res) => {
 	}
 });
 
+// API endpoint для получения детальных транзакций
+app.get("/api/transactions", async (req, res) => {
+	try {
+		console.log("Transactions API request received:", req.query);
+		
+		const { unit, from, to, type, category } = req.query;
+		
+		const revenueSheetId = process.env.REVENUE_SHEET_ID;
+		const expenseSheetId = process.env.EXPENSE_SHEET_ID;
+		const revenueSheetName = process.env.REVENUE_SHEET_NAME || "Выручка";
+		const expenseSheetName = process.env.EXPENSE_SHEET_NAME || "наличные";
+		
+		// Получаем данные из Google Sheets
+		const [hotelBlock, restaurantBlock, spaBlock, poolBlock, barBlock] = await Promise.all([
+			readSheetValues(revenueSheetId, `${revenueSheetName}!B:G`),
+			readSheetValues(revenueSheetId, `${revenueSheetName}!J:M`),
+			readSheetValues(revenueSheetId, `${revenueSheetName}!P:S`),
+			readSheetValues(revenueSheetId, `${revenueSheetName}!V:Y`),
+			readSheetValues(revenueSheetId, `${revenueSheetName}!AB:AE`),
+		]);
+		
+		// Парсим revenue (аналогично основному API)
+		const synthetic: any[][] = [["date", "unit", "cash", "bank", "acquiring", "breakdown"]];
+		
+		// Hotel/Bath
+		for (const r of hotelBlock) {
+			const date = r[0];
+			try { normalizeDate(date); } catch { continue; }
+			const moneyCells = [r[1], r[2], r[3], r[4], r[5]];
+			const bad = moneyCells.some((v) => {
+				if (v === undefined || v === null) return false;
+				const s = String(v).trim();
+				if (s === "") return false;
+				const n = Number(s.replace(/\s/g, '').replace(',', '.'));
+				return Number.isNaN(n);
+			});
+			if (bad) continue;
+			const bank = Number(r[1] ?? 0) + Number(r[2] ?? 0);
+			const online = Number(r[3] ?? 0);
+			const acquiringTerminal = Number(r[4] ?? 0);
+			const acquiring = acquiringTerminal;
+			const cash = Number(r[5] ?? 0);
+			const breakdown = { bankLegal: Number(r[1] ?? 0), bankIndividual: Number(r[2] ?? 0), online, acquiringTerminal, cash };
+			synthetic.push([date, "hotel", cash, bank, acquiring, breakdown]);
+		}
+		
+		// Restaurant
+		for (const r of restaurantBlock) {
+			const date = r[0];
+			try { normalizeDate(date); } catch { continue; }
+			const moneyCells = [r[1], r[2], r[3]];
+			const bad = moneyCells.some((v) => {
+				if (v === undefined || v === null) return false;
+				const s = String(v).trim();
+				if (s === "") return false;
+				const n = Number(s.replace(/\s/g, '').replace(',', '.'));
+				return Number.isNaN(n);
+			});
+			if (bad) continue;
+			const bank = Number(r[1] ?? 0);
+			const acquiring = Number(r[2] ?? 0);
+			const cash = Number(r[3] ?? 0);
+			const breakdown = { bankLegal: 0, bankIndividual: bank, online: 0, acquiringTerminal: acquiring, cash };
+			synthetic.push([date, "restaurant", cash, bank, acquiring, breakdown]);
+		}
+		
+		// Spa
+		for (const r of spaBlock) {
+			const date = r[0];
+			try { normalizeDate(date); } catch { continue; }
+			const moneyCells = [r[1], r[2], r[3]];
+			const bad = moneyCells.some((v) => {
+				if (v === undefined || v === null) return false;
+				const s = String(v).trim();
+				if (s === "") return false;
+				const n = Number(s.replace(/\s/g, '').replace(',', '.'));
+				return Number.isNaN(n);
+			});
+			if (bad) continue;
+			const bank = Number(r[1] ?? 0);
+			const acquiring = Number(r[2] ?? 0);
+			const cash = Number(r[3] ?? 0);
+			const breakdown = { bankLegal: 0, bankIndividual: bank, online: 0, acquiringTerminal: acquiring, cash };
+			synthetic.push([date, "spa", cash, bank, acquiring, breakdown]);
+		}
+		
+		// Pool
+		for (const r of poolBlock) {
+			const date = r[0];
+			try { normalizeDate(date); } catch { continue; }
+			const moneyCells = [r[2], r[3]];
+			const bad = moneyCells.some((v) => {
+				if (v === undefined || v === null) return false;
+				const s = String(v).trim();
+				if (s === "") return false;
+				const n = Number(s.replace(/\s/g, '').replace(',', '.'));
+				return Number.isNaN(n);
+			});
+			if (bad) continue;
+			const acquiring = Number(r[2] ?? 0);
+			const cash = Number(r[3] ?? 0);
+			const breakdown = { bankLegal: 0, bankIndividual: 0, online: 0, acquiringTerminal: acquiring, cash };
+			synthetic.push([date, "pool", cash, 0, acquiring, breakdown]);
+		}
+		
+		// Bar
+		for (const r of barBlock) {
+			const date = r[0];
+			try { normalizeDate(date); } catch { continue; }
+			const moneyCells = [r[2], r[3]];
+			const bad = moneyCells.some((v) => {
+				if (v === undefined || v === null) return false;
+				const s = String(v).trim();
+				if (s === "") return false;
+				const n = Number(s.replace(/\s/g, '').replace(',', '.'));
+				return Number.isNaN(n);
+			});
+			if (bad) continue;
+			const acquiring = Number(r[2] ?? 0);
+			const cash = Number(r[3] ?? 0);
+			const breakdown = { bankLegal: 0, bankIndividual: 0, online: 0, acquiringTerminal: acquiring, cash };
+			synthetic.push([date, "bar", cash, 0, acquiring, breakdown]);
+		}
+		
+		const revenueRows = parseRevenueRows(synthetic);
+		
+		// Читаем expenses
+		const expenseRange = process.env.EXPENSE_RANGE || 'A:W';
+		const [cashSheet, accountSheet] = await Promise.all([
+			readSheetValues(expenseSheetId, `наличные!${expenseRange}`),
+			readSheetValues(expenseSheetId, `Счет!${expenseRange}`)
+		]);
+		
+		const cashExpenses = parseExpenseSheet(cashSheet, 'cash');
+		const accountExpenses = parseExpenseSheet(accountSheet, 'account');
+		
+		// Фильтруем транзакции
+		let transactions: any[] = [];
+		
+		// Добавляем revenue transactions
+		if (!type || type === 'revenue') {
+			for (const r of revenueRows) {
+				if (unit && unit !== 'all' && r.unit !== unit) continue;
+				if (from && r.date < from) continue;
+				if (to && r.date > to) continue;
+				
+				const breakdown = r.breakdown || { bankLegal: 0, bankIndividual: 0, online: 0, acquiringTerminal: 0, cash: r.cash };
+				
+				transactions.push({
+					type: 'revenue',
+					date: r.date,
+					unit: r.unit,
+					cash: breakdown.cash,
+					bank: r.bank,
+					acquiring: r.acquiring,
+					total: r.cash + r.bank + r.acquiring + (breakdown.online || 0),
+					breakdown: breakdown
+				});
+			}
+		}
+		
+		// Добавляем expense transactions
+		if (!type || type === 'expense') {
+			const allExpenses = [...cashExpenses, ...accountExpenses];
+			for (const e of allExpenses) {
+				if (unit && unit !== 'all' && e.unit !== unit) continue;
+				if (from && e.date < from) continue;
+				if (to && e.date > to) continue;
+				if (category && !e.category.toLowerCase().includes(String(category).toLowerCase())) continue;
+				
+				transactions.push({
+					type: 'expense',
+					date: e.date,
+					unit: e.unit,
+					amount: e.amount,
+					category: e.category,
+					paymentMethod: e.paymentMethod,
+					rowIndex: e.rowIndex
+				});
+			}
+		}
+		
+		// Сортируем по дате (новые первые)
+		transactions.sort((a, b) => b.date.localeCompare(a.date));
+		
+		console.log(`Returning ${transactions.length} transactions`);
+		
+		res.json({ transactions, total: transactions.length });
+		
+	} catch (e: any) {
+		console.error("Error fetching transactions:", e);
+		res.status(500).json({ 
+			error: "Internal server error", 
+			message: e?.message || "Unknown error"
+		});
+	}
+});
+
 const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 app.listen(port, () => {
 	console.log(`Server listening on http://localhost:${port}`);

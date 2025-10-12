@@ -1,12 +1,27 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 import type { AggregatedDailyUnit } from "@/server/types";
 import { Building2, User, Globe, CreditCard, Banknote } from "lucide-react";
 
 interface Props {
   data: AggregatedDailyUnit[];
+  from?: string;
+  to?: string;
 }
 
-export function RevenueBreakdown({ data }: Props) {
+export function RevenueBreakdown({ data, from, to }: Props) {
+  const navigate = useNavigate();
+  
+  // Функция для навигации на страницу операций с фильтром по типу дохода
+  const navigateToRevenue = () => {
+    const params = new URLSearchParams();
+    params.append('type', 'revenue');
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+    
+    console.log('🔔 Navigating to revenue');
+    navigate(`/operations?${params.toString()}`);
+  };
   const totals = (Array.isArray(data) ? data : []).reduce(
     (acc, d) => {
       try {
@@ -69,7 +84,12 @@ export function RevenueBreakdown({ data }: Props) {
       {items.map((it) => {
         const IconComponent = it.icon;
         return (
-          <Card key={it.label} className="shadow-card h-20 relative overflow-hidden group">
+          <Card 
+            key={it.label} 
+            className="shadow-card h-20 relative overflow-hidden group cursor-pointer hover:scale-105 transition-transform"
+            onClick={navigateToRevenue}
+            title={`Кликните чтобы посмотреть детали: ${it.label}`}
+          >
             {/* Блюрная иконка на фоне */}
             <div className="absolute top-1 right-1 opacity-50 blur-[2px] group-hover:blur-[0px] transition-all duration-300 transform rotate-12">
               <IconComponent className={`h-12 w-12 ${it.color}`} />
