@@ -50,12 +50,16 @@ export function ExpenseBreakdown({ data, from, to }: Props) {
         const normalizedCategory = normalizeCategoryName(detail.category);
         const amount = Number(detail.amount) || 0;
         
-        // ФОТ категории
-        if (normalizedCategory.includes('фот') || 
+        // ФОТ категории (исключаем униформу)
+        if ((normalizedCategory.includes('фот') || 
             normalizedCategory.includes('зп') || 
             normalizedCategory.includes('специалист') ||
-            normalizedCategory.includes('трансфер') ||
-            normalizedCategory.includes('персонал')) {
+            normalizedCategory.includes('трансфер')) &&
+            !normalizedCategory.includes('униформ')) {
+          categoryTotals.fot += amount;
+        }
+        // Специальный случай: "трансфер для персонала" - это ФОТ
+        else if (normalizedCategory.includes('трансфер') && normalizedCategory.includes('персонал')) {
           categoryTotals.fot += amount;
         }
         // Закупки категории
@@ -83,12 +87,16 @@ export function ExpenseBreakdown({ data, from, to }: Props) {
         
         const normalizedCategory = normalizeCategoryName(category);
         
-        // ФОТ категории
-        if (normalizedCategory.includes('фот') || 
+        // ФОТ категории (исключаем униформу)
+        if ((normalizedCategory.includes('фот') || 
             normalizedCategory.includes('зп') || 
             normalizedCategory.includes('специалист') ||
-            normalizedCategory.includes('трансфер') ||
-            normalizedCategory.includes('персонал')) {
+            normalizedCategory.includes('трансфер')) &&
+            !normalizedCategory.includes('униформ')) {
+          categoryTotals.fot += amountPerCategory;
+        }
+        // Специальный случай: "трансфер для персонала" - это ФОТ
+        else if (normalizedCategory.includes('трансфер') && normalizedCategory.includes('персонал')) {
           categoryTotals.fot += amountPerCategory;
         }
         // Закупки категории

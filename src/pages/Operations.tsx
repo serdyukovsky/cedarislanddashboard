@@ -99,20 +99,40 @@ export default function Operations() {
     const normalized = cat.toLowerCase();
     
     if (catType === 'fot') {
-      return normalized.includes('фот') || 
-             normalized.includes('зп') || 
-             normalized.includes('специалист') ||
-             normalized.includes('трансфер') ||
-             normalized.includes('персонал');
+      // Исключаем униформу из ФОТ
+      if (normalized.includes('униформ')) {
+        return false;
+      }
+      // Обычные ФОТ категории
+      if (normalized.includes('фот') || 
+          normalized.includes('зп') || 
+          normalized.includes('специалист') ||
+          normalized.includes('трансфер')) {
+        return true;
+      }
+      // Специальный случай: "трансфер для персонала"
+      if (normalized.includes('трансфер') && normalized.includes('персонал')) {
+        return true;
+      }
+      return false;
     } else if (catType === 'purchases') {
       return normalized.includes('продукт') || 
              normalized.includes('расходн') ||
              normalized.includes('материал');
     } else if (catType === 'other') {
       // Прочее - всё что не ФОТ и не закупки
-      const isFot = normalized.includes('фот') || normalized.includes('зп') || 
-                    normalized.includes('специалист') || normalized.includes('трансфер') || 
-                    normalized.includes('персонал');
+      // Исключаем униформу из ФОТ
+      let isFot = false;
+      if (!normalized.includes('униформ')) {
+        if (normalized.includes('фот') || normalized.includes('зп') || 
+            normalized.includes('специалист') || normalized.includes('трансфер')) {
+          isFot = true;
+        }
+        // Специальный случай: "трансфер для персонала"
+        if (normalized.includes('трансфер') && normalized.includes('персонал')) {
+          isFot = true;
+        }
+      }
       const isPurchases = normalized.includes('продукт') || normalized.includes('расходн') || 
                           normalized.includes('материал');
       return !isFot && !isPurchases;

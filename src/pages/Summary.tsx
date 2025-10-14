@@ -265,11 +265,18 @@ const Summary = () => {
             
             const normalized = detail.category.toLowerCase();
             
-            if (normalized.includes('фот') || normalized.includes('зп') || 
-                normalized.includes('специалист') || normalized.includes('трансфер') || 
-                normalized.includes('персонал')) {
+            // ФОТ категории (исключаем униформу)
+            if ((normalized.includes('фот') || normalized.includes('зп') || 
+                normalized.includes('специалист') || normalized.includes('трансфер')) &&
+                !normalized.includes('униформ')) {
               totals.fot += detail.amount;
-            } else if (normalized.includes('продукт') || normalized.includes('расходн') || 
+            }
+            // Специальный случай: "трансфер для персонала" - это ФОТ
+            else if (normalized.includes('трансфер') && normalized.includes('персонал')) {
+              totals.fot += detail.amount;
+            }
+            // Закупки
+            else if (normalized.includes('продукт') || normalized.includes('расходн') || 
                        normalized.includes('материал')) {
               totals.purchases += detail.amount;
             } else {
